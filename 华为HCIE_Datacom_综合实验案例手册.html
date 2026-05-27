@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 综合实验案例手册</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-综合实验案例手册" class="lv1" data-title="华为 HCIE-Datacom 综合实验案例手册">华为 HCIE-Datacom 综合实验案例手册</a><a href="#案例-1双交换机园区基础网" class="lv2" data-title="案例 1：双交换机园区基础网">案例 1：双交换机园区基础网</a><a href="#场景" class="lv3" data-title="场景">场景</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#进阶扩展" class="lv3" data-title="进阶扩展">进阶扩展</a><a href="#案例-2三路由器-ospf-多区域" class="lv2" data-title="案例 2：三路由器 OSPF 多区域">案例 2：三路由器 OSPF 多区域</a><a href="#拓扑" class="lv3" data-title="拓扑">拓扑</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#故障注入" class="lv3" data-title="故障注入">故障注入</a><a href="#案例-3企业双出口-bgp" class="lv2" data-title="案例 3：企业双出口 BGP">案例 3：企业双出口 BGP</a><a href="#场景" class="lv3" data-title="场景">场景</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#提升点" class="lv3" data-title="提升点">提升点</a><a href="#案例-4mpls-l3vpn" class="lv2" data-title="案例 4：MPLS L3VPN">案例 4：MPLS L3VPN</a><a href="#拓扑" class="lv3" data-title="拓扑">拓扑</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#故障注入" class="lv3" data-title="故障注入">故障注入</a><a href="#案例-5园区三层架构设计" class="lv2" data-title="案例 5：园区三层架构设计">案例 5：园区三层架构设计</a><a href="#场景" class="lv3" data-title="场景">场景</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#专家思考" class="lv3" data-title="专家思考">专家思考</a><a href="#案例-6sd-wan-业务选路方案分析题" class="lv2" data-title="案例 6：SD-WAN 业务选路方案分析题">案例 6：SD-WAN 业务选路方案分析题</a><a href="#场景" class="lv3" data-title="场景">场景</a><a href="#要求" class="lv3" data-title="要求">要求</a><a href="#输出" class="lv3" data-title="输出">输出</a><a href="#案例-7自动化巡检" class="lv2" data-title="案例 7：自动化巡检">案例 7：自动化巡检</a><a href="#场景" class="lv3" data-title="场景">场景</a><a href="#任务" class="lv3" data-title="任务">任务</a><a href="#验证" class="lv3" data-title="验证">验证</a><a href="#案例-8hcie-风格综合实验" class="lv2" data-title="案例 8：HCIE 风格综合实验">案例 8：HCIE 风格综合实验</a><a href="#目标能力" class="lv3" data-title="目标能力">目标能力</a><a href="#实验流程" class="lv3" data-title="实验流程">实验流程</a><a href="#验收标准" class="lv3" data-title="验收标准">验收标准</a><a href="#综合实验训练方法" class="lv2" data-title="综合实验训练方法">综合实验训练方法</a><a href="#方法-1每个实验都做三个版本" class="lv3" data-title="方法 1：每个实验都做三个版本">方法 1：每个实验都做三个版本</a><a href="#方法-2实验后必须输出" class="lv3" data-title="方法 2：实验后必须输出">方法 2：实验后必须输出</a><a href="#方法-3限时训练" class="lv3" data-title="方法 3：限时训练">方法 3：限时训练</a><a href="#最后建议" class="lv2" data-title="最后建议">最后建议</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 综合实验案例手册</h1>
+          <p class="subtitle">目标：把前面分散的知识点组合成综合实验，训练你接近 HCIE 的设计、部署、验证、排障能力。</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-综合实验案例手册">华为 HCIE-Datacom 综合实验案例手册</h1>
+<p>目标：把前面分散的知识点组合成综合实验，训练你接近 HCIE 的设计、部署、验证、排障能力。</p>
+<hr>
+<h2 id="案例-1双交换机园区基础网">案例 1：双交换机园区基础网</h2>
+<h3 id="场景">场景</h3>
+<ul>
+<li>两台交换机 SW1、SW2</li>
+<li>VLAN10 办公网，VLAN20 访客网</li>
+<li>三层交换网关放在 SW1</li>
+</ul>
+<h3 id="任务">任务</h3>
+<ul>
+<li>创建 VLAN</li>
+<li>配置 trunk</li>
+<li>配置 Vlanif 网关</li>
+<li>VLAN10 与 VLAN20 可控互通</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>同 VLAN 可通</li>
+<li>跨 VLAN 可通</li>
+<li>trunk 正常转发</li>
+</ul>
+<h3 id="进阶扩展">进阶扩展</h3>
+<ul>
+<li>增加 ACL，限制访客网访问办公网</li>
+</ul>
+<hr>
+<h2 id="案例-2三路由器-ospf-多区域">案例 2：三路由器 OSPF 多区域</h2>
+<h3 id="拓扑">拓扑</h3>
+<section class="diagram"><div class="diagram-head"><strong>拓扑示意</strong><span>自动从文档中的结构文本生成</span></div><div class="diagram-body"><div class="diagram-grid"><div><svg viewBox="0 0 720 220" class="diagram-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="network topology diagram"><defs><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#94a3b8" flood-opacity=".18"/></filter></defs><rect x="0" y="0" width="100%" height="100%" fill="#fcfffe"/><line x1="90" y1="70" x2="240" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="240" y1="70" x2="390" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><rect x="42" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="90" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR1</text><rect x="192" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="240" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR2</text><rect x="342" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="390" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR3</text></svg></div><div class="diagram-text"><pre><code>AR1 --- AR2 --- AR3</code></pre></div></div></div></section>
+<ul>
+<li>AR1/AR2 在 Area 0</li>
+<li>AR3 在 Area 1</li>
+</ul>
+<h3 id="任务">任务</h3>
+<ul>
+<li>建 OSPF 邻居</li>
+<li>发布 Loopback</li>
+<li>做 Area 划分</li>
+<li>发布缺省路由</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>邻居 Full</li>
+<li>所有 Loopback 路由可见</li>
+<li>缺省路由正常下发</li>
+</ul>
+<h3 id="故障注入">故障注入</h3>
+<ul>
+<li>故意把 AR3 配成错误 Area</li>
+<li>排查并修复</li>
+</ul>
+<hr>
+<h2 id="案例-3企业双出口-bgp">案例 3：企业双出口 BGP</h2>
+<h3 id="场景">场景</h3>
+<ul>
+<li>企业 AS65001</li>
+<li>ISP-A AS65002</li>
+<li>ISP-B AS65003</li>
+</ul>
+<h3 id="任务">任务</h3>
+<ul>
+<li>与两个 ISP 建 EBGP</li>
+<li>主出口走 A，备份走 B</li>
+<li>某些路由出向优先 A</li>
+<li>入向用 AS-Path prepend 影响</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>BGP 邻居 Established</li>
+<li>出口选路符合预期</li>
+<li>路由断开时切到备链路</li>
+</ul>
+<h3 id="提升点">提升点</h3>
+<ul>
+<li>增加 route-policy 和 community 设计</li>
+</ul>
+<hr>
+<h2 id="案例-4mpls-l3vpn">案例 4：MPLS L3VPN</h2>
+<h3 id="拓扑">拓扑</h3>
+<pre><code>CE1 -- PE1 == P == PE2 -- CE2</code></pre>
+<h3 id="任务">任务</h3>
+<ul>
+<li>核心跑 IGP</li>
+<li>开启 MPLS/LDP</li>
+<li>PE 间建立 MP-BGP VPNv4</li>
+<li>建立 VPN-A</li>
+<li>CE1 与 CE2 私网互通</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>LDP 邻居正常</li>
+<li>MPLS 转发表正常</li>
+<li>VPN 路由正常</li>
+<li>业务互通</li>
+</ul>
+<h3 id="故障注入">故障注入</h3>
+<ul>
+<li>改错 RT</li>
+<li>观察 VPN 路由不导入</li>
+</ul>
+<hr>
+<h2 id="案例-5园区三层架构设计">案例 5：园区三层架构设计</h2>
+<h3 id="场景">场景</h3>
+<ul>
+<li>接入层两台交换机</li>
+<li>汇聚层双机冗余</li>
+<li>核心层双上联</li>
+<li>业务网、访客网、管理网</li>
+</ul>
+<h3 id="任务">任务</h3>
+<ul>
+<li>地址规划</li>
+<li>VLAN 规划</li>
+<li>网关位置设计</li>
+<li>STP 根桥设计</li>
+<li>Eth-Trunk 上联</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>用户接入正常</li>
+<li>上联链路故障时业务恢复</li>
+<li>访客与办公隔离</li>
+</ul>
+<h3 id="专家思考">专家思考</h3>
+<ul>
+<li>广播域是否合理</li>
+<li>是否有单点</li>
+<li>地址是否预留</li>
+</ul>
+<hr>
+<h2 id="案例-6sd-wan-业务选路方案分析题">案例 6：SD-WAN 业务选路方案分析题</h2>
+<h3 id="场景">场景</h3>
+<ul>
+<li>总部 + 3 分支</li>
+<li>每个分支有 MPLS 与 Internet 双链路</li>
+<li>视频业务优先稳定，文件传输优先低成本</li>
+</ul>
+<h3 id="要求">要求</h3>
+<ul>
+<li>设计链路策略</li>
+<li>设计故障切换</li>
+<li>设计 SLA 监测</li>
+</ul>
+<h3 id="输出">输出</h3>
+<ul>
+<li>拓扑图</li>
+<li>业务流向图</li>
+<li>选路策略说明</li>
+<li>故障切换逻辑</li>
+</ul>
+<hr>
+<h2 id="案例-7自动化巡检">案例 7：自动化巡检</h2>
+<h3 id="场景">场景</h3>
+<ul>
+<li>管理 20 台设备</li>
+<li>需要批量获取：</li>
+<li>版本</li>
+<li>接口状态</li>
+<li>OSPF 邻居</li>
+<li>BGP 邻居</li>
+</ul>
+<h3 id="任务">任务</h3>
+<ul>
+<li>用 Python + Paramiko 连接设备</li>
+<li>执行 display 命令</li>
+<li>生成报告</li>
+</ul>
+<h3 id="验证">验证</h3>
+<ul>
+<li>报告中标出异常设备</li>
+<li>文件可复用</li>
+</ul>
+<hr>
+<h2 id="案例-8hcie-风格综合实验">案例 8：HCIE 风格综合实验</h2>
+<h3 id="目标能力">目标能力</h3>
+<ul>
+<li>二层</li>
+<li>三层</li>
+<li>路由协议</li>
+<li>BGP</li>
+<li>MPLS VPN</li>
+<li>基础安全</li>
+<li>自动化验证</li>
+</ul>
+<h3 id="实验流程">实验流程</h3>
+<ol>
+<li>先画拓扑</li>
+<li>做地址规划</li>
+<li>配基础接口</li>
+<li>配二层</li>
+<li>配三层</li>
+<li>配 OSPF/BGP/MPLS</li>
+<li>配策略</li>
+<li>验证业务</li>
+<li>故障注入</li>
+<li>复盘</li>
+</ol>
+<h3 id="验收标准">验收标准</h3>
+<ul>
+<li>限时完成</li>
+<li>业务全部通</li>
+<li>故障能快速定位</li>
+<li>配置可解释</li>
+</ul>
+<hr>
+<h2 id="综合实验训练方法">综合实验训练方法</h2>
+<h3 id="方法-1每个实验都做三个版本">方法 1：每个实验都做三个版本</h3>
+<ul>
+<li>标准版：按题做通</li>
+<li>变形版：改需求再做一遍</li>
+<li>故障版：故意弄错再排障</li>
+</ul>
+<h3 id="方法-2实验后必须输出">方法 2：实验后必须输出</h3>
+<ul>
+<li>拓扑图</li>
+<li>地址表</li>
+<li>配置文件</li>
+<li>验证截图或命令输出</li>
+<li>故障复盘</li>
+</ul>
+<h3 id="方法-3限时训练">方法 3：限时训练</h3>
+<ul>
+<li>基础实验：30 分钟</li>
+<li>中级实验：60-90 分钟</li>
+<li>综合实验：120-180 分钟</li>
+</ul>
+<hr>
+<h2 id="最后建议">最后建议</h2>
+<p>HCIE 训练核心不是“做完实验”，而是：</p>
+<ul>
+<li>你能不能解释每一条配置为什么存在</li>
+<li>你能不能在故障时不慌</li>
+<li>你能不能从实验走向工程</li>
+</ul>
+          <nav class="pager"><a href="华为HCIE_Datacom_故障排查手册.html"><span class="pager-label">上一页</span>华为 HCIE-Datacom 故障排查手册</a><a href="华为HCIE_Datacom_自动化脚本实战手册.html"><span class="pager-label">下一页</span>华为 HCIE-Datacom 自动化脚本实战手册</a></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

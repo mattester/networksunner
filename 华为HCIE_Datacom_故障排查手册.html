@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 故障排查手册</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-故障排查手册" class="lv1" data-title="华为 HCIE-Datacom 故障排查手册">华为 HCIE-Datacom 故障排查手册</a><a href="#1-排障总原则" class="lv2" data-title="1. 排障总原则">1. 排障总原则</a><a href="#11-不要上来就改配置" class="lv3" data-title="1.1 不要上来就改配置">1.1 不要上来就改配置</a><a href="#12-分层排障法" class="lv3" data-title="1.2 分层排障法">1.2 分层排障法</a><a href="#13-三个关键问题" class="lv3" data-title="1.3 三个关键问题">1.3 三个关键问题</a><a href="#2-快速排障总表" class="lv2" data-title="2. 快速排障总表">2. 快速排障总表</a><a href="#3-物理层故障" class="lv2" data-title="3. 物理层故障">3. 物理层故障</a><a href="#场景-1接口-downdown" class="lv3" data-title="场景 1：接口 down/down">场景 1：接口 down/down</a><a href="#现象" class="lv4" data-title="现象">现象</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#场景-2接口-up-但丢包严重" class="lv3" data-title="场景 2：接口 up 但丢包严重">场景 2：接口 up 但丢包严重</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#4-二层故障" class="lv2" data-title="4. 二层故障">4. 二层故障</a><a href="#场景-3同-vlan-主机不通" class="lv3" data-title="场景 3：同 VLAN 主机不通">场景 3：同 VLAN 主机不通</a><a href="#现象" class="lv4" data-title="现象">现象</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#场景-4跨交换机同-vlan-不通" class="lv3" data-title="场景 4：跨交换机同 VLAN 不通">场景 4：跨交换机同 VLAN 不通</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#5-三层故障" class="lv2" data-title="5. 三层故障">5. 三层故障</a><a href="#场景-5跨-vlan-不通" class="lv3" data-title="场景 5：跨 VLAN 不通">场景 5：跨 VLAN 不通</a><a href="#现象" class="lv4" data-title="现象">现象</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#场景-6静态路由配置了但不通" class="lv3" data-title="场景 6：静态路由配置了但不通">场景 6：静态路由配置了但不通</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#6-ospf-故障" class="lv2" data-title="6. OSPF 故障">6. OSPF 故障</a><a href="#场景-7ospf-邻居不起" class="lv3" data-title="场景 7：OSPF 邻居不起">场景 7：OSPF 邻居不起</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#排障顺序" class="lv4" data-title="排障顺序">排障顺序</a><a href="#场景-8ospf-邻居-full但没学到路由" class="lv3" data-title="场景 8：OSPF 邻居 Full，但没学到路由">场景 8：OSPF 邻居 Full，但没学到路由</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#7-bgp-故障" class="lv2" data-title="7. BGP 故障">7. BGP 故障</a><a href="#场景-9bgp-邻居建立失败" class="lv3" data-title="场景 9：BGP 邻居建立失败">场景 9：BGP 邻居建立失败</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#场景-10bgp-邻居起了但没路由" class="lv3" data-title="场景 10：BGP 邻居起了，但没路由">场景 10：BGP 邻居起了，但没路由</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#8-mpls-ldp-vpn-故障" class="lv2" data-title="8. MPLS / LDP / VPN 故障">8. MPLS / LDP / VPN 故障</a><a href="#场景-11ldp-邻居不起" class="lv3" data-title="场景 11：LDP 邻居不起">场景 11：LDP 邻居不起</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#场景-12mpls-vpn-不通" class="lv3" data-title="场景 12：MPLS VPN 不通">场景 12：MPLS VPN 不通</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#9-nat-dhcp-internet-出口故障" class="lv2" data-title="9. NAT / DHCP / Internet 出口故障">9. NAT / DHCP / Internet 出口故障</a><a href="#场景-13内网能到网关但不能上网" class="lv3" data-title="场景 13：内网能到网关，但不能上网">场景 13：内网能到网关，但不能上网</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#场景-14终端拿不到-dhcp-地址" class="lv3" data-title="场景 14：终端拿不到 DHCP 地址">场景 14：终端拿不到 DHCP 地址</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#10-无线-园区常见问题" class="lv2" data-title="10. 无线 / 园区常见问题">10. 无线 / 园区常见问题</a><a href="#场景-15无线已关联但无法上网" class="lv3" data-title="场景 15：无线已关联，但无法上网">场景 15：无线已关联，但无法上网</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证思路" class="lv4" data-title="验证思路">验证思路</a><a href="#典型命令方向" class="lv4" data-title="典型命令方向">典型命令方向</a><a href="#场景-16用户漫游后业务异常" class="lv3" data-title="场景 16：用户漫游后业务异常">场景 16：用户漫游后业务异常</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#11-性能与质量问题" class="lv2" data-title="11. 性能与质量问题">11. 性能与质量问题</a><a href="#场景-17ping-通但业务很慢" class="lv3" data-title="场景 17：ping 通，但业务很慢">场景 17：ping 通，但业务很慢</a><a href="#可能原因" class="lv4" data-title="可能原因">可能原因</a><a href="#验证命令" class="lv4" data-title="验证命令">验证命令</a><a href="#修复动作" class="lv4" data-title="修复动作">修复动作</a><a href="#场景-18高峰期偶发中断" class="lv3" data-title="场景 18：高峰期偶发中断">场景 18：高峰期偶发中断</a><a href="#常见思路" class="lv4" data-title="常见思路">常见思路</a><a href="#12-变更后的故障" class="lv2" data-title="12. 变更后的故障">12. 变更后的故障</a><a href="#场景-19改完配置后全网部分异常" class="lv3" data-title="场景 19：改完配置后全网部分异常">场景 19：改完配置后全网部分异常</a><a href="#高级处理流程" class="lv4" data-title="高级处理流程">高级处理流程</a><a href="#建议命令" class="lv4" data-title="建议命令">建议命令</a><a href="#专家技巧" class="lv4" data-title="专家技巧">专家技巧</a><a href="#13-排障模板" class="lv2" data-title="13. 排障模板">13. 排障模板</a><a href="#故障记录模板" class="lv3" data-title="故障记录模板">故障记录模板</a><a href="#14-高级专家的故障思维" class="lv2" data-title="14. 高级专家的故障思维">14. 高级专家的故障思维</a><a href="#141-永远先问最小闭环" class="lv3" data-title="14.1 永远先问“最小闭环”">14.1 永远先问“最小闭环”</a><a href="#142-学会缩圈" class="lv3" data-title="14.2 学会“缩圈”">14.2 学会“缩圈”</a><a href="#143-高级技巧" class="lv3" data-title="14.3 高级技巧">14.3 高级技巧</a><a href="#15-常用排障命令索引" class="lv2" data-title="15. 常用排障命令索引">15. 常用排障命令索引</a><a href="#16-结语" class="lv2" data-title="16. 结语">16. 结语</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 故障排查手册</h1>
+          <p class="subtitle">目标：把常见网络故障按“现象 - 可能原因 - 验证命令 - 修复动作”拆开，帮助你形成高级网络工程师的排障思维。</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-故障排查手册">华为 HCIE-Datacom 故障排查手册</h1>
+<p>目标：把常见网络故障按“现象 - 可能原因 - 验证命令 - 修复动作”拆开，帮助你形成高级网络工程师的排障思维。 适用范围：华为 VRP 风格网络设备、Datacom 常见实验与项目场景。 核心原则：先确认范围，再确认分层，再确认变更，最后再确认控制面与数据面。</p>
+<hr>
+<h2 id="1-排障总原则">1. 排障总原则</h2>
+<h3 id="11-不要上来就改配置">1.1 不要上来就改配置</h3>
+<p>先做四件事：</p>
+<ol>
+<li>记录故障现象</li>
+<li>确认影响范围</li>
+<li>确认最近变更</li>
+<li>收集当前状态</li>
+</ol>
+<p>建议先执行：</p>
+<pre><code>display interface brief
+display ip interface brief
+display current-configuration
+display ip routing-table</code></pre>
+<h3 id="12-分层排障法">1.2 分层排障法</h3>
+<table><thead><tr><th>层次</th><th>核心对象</th><th>典型问题</th></tr></thead><tbody><tr><td>物理层</td><td>接口、模块、速率、双工、光功率</td><td>接口 down、丢包、CRC</td></tr><tr><td>二层</td><td>VLAN、MAC、Trunk、STP、聚合</td><td>同网段不通、广播异常</td></tr><tr><td>三层</td><td>ARP、IP、路由、邻居</td><td>跨网段不通、邻居不起</td></tr><tr><td>四层</td><td>TCP/UDP、端口、NAT</td><td>某业务不通但 ping 通</td></tr><tr><td>应用层</td><td>DNS、HTTP、认证、API</td><td>网通但业务不可用</td></tr></tbody></table>
+<h3 id="13-三个关键问题">1.3 三个关键问题</h3>
+<p>每次故障都问：</p>
+<ol>
+<li>是所有业务都不通，还是某一类业务不通？</li>
+<li>是所有用户都不通，还是某个网段/某台设备不通？</li>
+<li>是一直不通，还是最近变更后不通？</li>
+</ol>
+<hr>
+<h2 id="2-快速排障总表">2. 快速排障总表</h2>
+<table><thead><tr><th>现象</th><th>最先怀疑</th><th>先查什么</th></tr></thead><tbody><tr><td>接口不通</td><td>物理/接口状态</td><td><code>display interface brief</code></td></tr><tr><td>同 VLAN 不通</td><td>VLAN/端口类型/MAC</td><td><code>display vlan</code> <code>display mac-address</code></td></tr><tr><td>跨 VLAN 不通</td><td>Vlanif/网关/ACL</td><td><code>display ip interface brief</code></td></tr><tr><td>OSPF 邻居不起</td><td>Area/认证/MTU/IP</td><td><code>display ospf peer</code></td></tr><tr><td>BGP 邻居不起</td><td>AS/可达性/源接口</td><td><code>display bgp peer</code></td></tr><tr><td>有邻居但没路由</td><td>过滤/策略/宣告缺失</td><td><code>display routing-table</code></td></tr><tr><td>MPLS VPN 不通</td><td>IGP/LDP/MP-BGP/VRF</td><td><code>display mpls ldp session</code></td></tr><tr><td>Internet 不通</td><td>缺省路由/NAT/ACL</td><td><code>display ip routing-table</code> <code>display nat session</code></td></tr><tr><td>无线能连但不能上网</td><td>认证/NAT/DHCP/DNS</td><td><code>display ip pool</code></td></tr><tr><td>某应用慢</td><td>QoS/丢包/拥塞/路径绕行</td><td>接口统计+路由路径</td></tr></tbody></table>
+<hr>
+<h2 id="3-物理层故障">3. 物理层故障</h2>
+<h3 id="场景-1接口-downdown">场景 1：接口 down/down</h3>
+<h4 id="现象">现象</h4>
+<ul>
+<li><code>display interface brief</code> 显示接口 down</li>
+<li>无法 ping 通直连接口</li>
+</ul>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>网线/光纤没接好</li>
+<li>模块故障</li>
+<li>对端接口 shutdown</li>
+<li>速率/双工不匹配</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display interface brief
+display interface GigabitEthernet 0/0/1</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>检查物理连接</li>
+<li><code>undo shutdown</code></li>
+<li>检查对端接口状态</li>
+<li>统一速率与双工</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>先看接口是否 up，再看协议是否 up</li>
+<li><code>up/down</code> 和 <code>down/down</code> 的含义不同</li>
+</ul>
+<h3 id="场景-2接口-up-但丢包严重">场景 2：接口 up 但丢包严重</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>CRC 错误</li>
+<li>双工不一致</li>
+<li>光模块质量差</li>
+<li>上联拥塞</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display interface GigabitEthernet 0/0/1</code></pre>
+<p>重点看：</p>
+<ul>
+<li>CRC</li>
+<li>input error</li>
+<li>output error</li>
+<li>discard</li>
+</ul>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>更换线缆/模块</li>
+<li>对齐速率双工</li>
+<li>检查链路利用率</li>
+</ul>
+<hr>
+<h2 id="4-二层故障">4. 二层故障</h2>
+<h3 id="场景-3同-vlan-主机不通">场景 3：同 VLAN 主机不通</h3>
+<h4 id="现象">现象</h4>
+<ul>
+<li>PC1 与 PC2 理论上同网段，但互 ping 不通</li>
+</ul>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>接口没进同一个 VLAN</li>
+<li>接口还是 trunk/hybrid 但接法不对</li>
+<li>MAC 没学习到</li>
+<li>STP 阻塞了异常端口</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display vlan
+display port vlan
+display mac-address
+display stp brief</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>确认接口类型是 access</li>
+<li>确认 <code>port default vlan</code></li>
+<li>确认 trunk 放行 VLAN</li>
+<li>排查是否误入隔离端口</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>同 VLAN 不通先查二层，不要急着查路由</li>
+<li><code>display mac-address</code> 是判断二层学习是否正常的关键</li>
+</ul>
+<h3 id="场景-4跨交换机同-vlan-不通">场景 4：跨交换机同 VLAN 不通</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>trunk 没放行对应 VLAN</li>
+<li>trunk 两端模式不一致</li>
+<li>聚合口成员不一致</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display interface brief
+display port vlan
+display eth-trunk 1</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>在 trunk 口补 <code>allow-pass vlan</code></li>
+<li>聚合口两端链路策略一致</li>
+</ul>
+<hr>
+<h2 id="5-三层故障">5. 三层故障</h2>
+<h3 id="场景-5跨-vlan-不通">场景 5：跨 VLAN 不通</h3>
+<h4 id="现象">现象</h4>
+<ul>
+<li>VLAN10 能访问本地，但访问 VLAN20 不通</li>
+</ul>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>Vlanif 没有 IP</li>
+<li>Vlanif 没有起来</li>
+<li>PC 网关配置错误</li>
+<li>ACL 拦截</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ip interface brief
+display current-configuration interface Vlanif 10
+display current-configuration interface Vlanif 20
+display acl all</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>给 Vlanif 配 IP</li>
+<li>确保对应 VLAN 有活跃端口，Vlanif 才会 up</li>
+<li>修正终端网关</li>
+<li>检查接口 ACL</li>
+</ul>
+<h3 id="场景-6静态路由配置了但不通">场景 6：静态路由配置了但不通</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>下一跳不可达</li>
+<li>返回路由缺失</li>
+<li>路由掩码写错</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ip routing-table
+ping x.x.x.x
+tracert x.x.x.x</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>确保下一跳直连可达</li>
+<li>补对端回程路由</li>
+<li>检查掩码</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>路由“去得了但回不来”非常常见</li>
+<li>任意互通问题都要双向看</li>
+</ul>
+<hr>
+<h2 id="6-ospf-故障">6. OSPF 故障</h2>
+<p>根据华为官方 <code>display ospf peer</code>、<code>display ospf interface</code> 等命令，OSPF 排障优先看邻居关系和接口参数。citeturn0search0</p>
+<h3 id="场景-7ospf-邻居不起">场景 7：OSPF 邻居不起</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>IP 不通</li>
+<li>Area 不一致</li>
+<li>Hello/Dead 时间不一致</li>
+<li>认证不一致</li>
+<li>MTU 不一致</li>
+<li>Router ID 冲突</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ospf peer
+display ospf interface
+display current-configuration | include ospf
+display ip interface brief</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>确认底层三层可达</li>
+<li>对齐 Area</li>
+<li>对齐定时器</li>
+<li>对齐认证</li>
+<li>对齐 MTU 或做相应调整</li>
+</ul>
+<h4 id="排障顺序">排障顺序</h4>
+<ol>
+<li>接口 up 吗</li>
+<li>IP 通吗</li>
+<li>邻居状态是什么</li>
+<li>区域和认证对吗</li>
+<li>MTU 和网络类型对吗</li>
+</ol>
+<h3 id="场景-8ospf-邻居-full但没学到路由">场景 8：OSPF 邻居 Full，但没学到路由</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>network 未宣告</li>
+<li>路由过滤</li>
+<li>汇总影响</li>
+<li>引入缺失</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ospf routing
+display ip routing-table protocol ospf
+display current-configuration | include import-route</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>补正确网段宣告</li>
+<li>检查 area 设计与汇总</li>
+<li>检查路由策略</li>
+</ul>
+<hr>
+<h2 id="7-bgp-故障">7. BGP 故障</h2>
+<h3 id="场景-9bgp-邻居建立失败">场景 9：BGP 邻居建立失败</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>对端 AS 配错</li>
+<li>源地址不对</li>
+<li>对端不可达</li>
+<li>Loopback 建邻未指定源接口</li>
+<li>TCP 179 被拦截</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display bgp peer
+display current-configuration | include bgp
+display ip routing-table
+ping x.x.x.x</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>修正 <code>peer x.x.x.x as-number</code></li>
+<li>如果是 loopback 建邻，补 <code>connect-interface</code></li>
+<li>确保有到对端 loopback 的路由</li>
+</ul>
+<h3 id="场景-10bgp-邻居起了但没路由">场景 10：BGP 邻居起了，但没路由</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>本地没宣告 <code>network</code></li>
+<li>宣告前缀不在路由表</li>
+<li>route-policy 过滤掉了</li>
+<li>next-hop 不可达</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display bgp routing-table
+display ip routing-table
+display current-configuration | include route-policy</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>确保要宣告的前缀先存在于本地路由表</li>
+<li>放开错误策略</li>
+<li>修正 next-hop</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>BGP 的路由问题，很多时候不是“协议没起”，而是“策略把路由改没了”</li>
+</ul>
+<hr>
+<h2 id="8-mpls-ldp-vpn-故障">8. MPLS / LDP / VPN 故障</h2>
+<h3 id="场景-11ldp-邻居不起">场景 11：LDP 邻居不起</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>接口未开启 MPLS/LDP</li>
+<li>IGP 不通</li>
+<li>LSR-ID 问题</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display mpls ldp session
+display mpls lsp
+display ip routing-table</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>在接口上补 <code>mpls</code>、<code>mpls ldp</code></li>
+<li>确保 IGP 打通</li>
+</ul>
+<h3 id="场景-12mpls-vpn-不通">场景 12：MPLS VPN 不通</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>VRF 未绑定接口</li>
+<li>RD/RT 配错</li>
+<li>MP-BGP VPNv4 邻居没建好</li>
+<li>CE-PE 没学到客户路由</li>
+<li>标签不通</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ip vpn-instance
+display bgp vpnv4 all peer
+display bgp vpnv4 all routing-table
+display ip routing-table vpn-instance VPN-A
+display mpls forwarding-table</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>检查接口绑定 VRF</li>
+<li>检查 RT import/export</li>
+<li>检查 MP-BGP 激活</li>
+<li>检查 PE-CE 路由学习</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>VPN 不通不要乱查</li>
+<li>固定顺序：IGP -&gt; LDP -&gt; MP-BGP -&gt; VRF -&gt; 标签</li>
+</ul>
+<hr>
+<h2 id="9-nat-dhcp-internet-出口故障">9. NAT / DHCP / Internet 出口故障</h2>
+<h3 id="场景-13内网能到网关但不能上网">场景 13：内网能到网关，但不能上网</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>缺省路由没配</li>
+<li>NAT 没生效</li>
+<li>ACL 没匹配内网地址</li>
+<li>出口接口没做 NAT</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ip routing-table
+display nat session all
+display nat outbound
+display acl 2001</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>补默认路由</li>
+<li>检查 NAT 调用 ACL</li>
+<li>检查出口口是否调用 NAT</li>
+</ul>
+<h3 id="场景-14终端拿不到-dhcp-地址">场景 14：终端拿不到 DHCP 地址</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>DHCP 未开启</li>
+<li>地址池写错</li>
+<li>网关接口未做 DHCP 选择</li>
+<li>中继缺失</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display ip pool
+display dhcp server ip-in-use
+display current-configuration | include dhcp</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>开启 <code>dhcp enable</code></li>
+<li>修正地址池</li>
+<li>接口补 <code>dhcp select interface</code></li>
+</ul>
+<hr>
+<h2 id="10-无线-园区常见问题">10. 无线 / 园区常见问题</h2>
+<h3 id="场景-15无线已关联但无法上网">场景 15：无线已关联，但无法上网</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>DHCP 失败</li>
+<li>VLAN 映射错误</li>
+<li>Portal/认证未通过</li>
+<li>出口 NAT 或 DNS 问题</li>
+</ul>
+<h4 id="验证思路">验证思路</h4>
+<ol>
+<li>客户端有地址吗</li>
+<li>网关能通吗</li>
+<li>DNS 能解析吗</li>
+<li>是否通过认证</li>
+</ol>
+<h4 id="典型命令方向">典型命令方向</h4>
+<ul>
+<li>查看地址池使用</li>
+<li>查看 VLAN/Vlanif</li>
+<li>查看认证状态</li>
+<li>查看出口 NAT</li>
+</ul>
+<h3 id="场景-16用户漫游后业务异常">场景 16：用户漫游后业务异常</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>策略未随用户迁移</li>
+<li>认证状态同步异常</li>
+<li>Overlay/EVPN 控制面不稳定</li>
+</ul>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>园区问题不要只看一台接入交换机</li>
+<li>要看“用户身份、位置、业务策略、控制器状态、Overlay 路径”</li>
+</ul>
+<hr>
+<h2 id="11-性能与质量问题">11. 性能与质量问题</h2>
+<h3 id="场景-17ping-通但业务很慢">场景 17：ping 通，但业务很慢</h3>
+<h4 id="可能原因">可能原因</h4>
+<ul>
+<li>丢包</li>
+<li>MTU 问题</li>
+<li>QoS 没生效</li>
+<li>路由绕行</li>
+<li>CPU/接口拥塞</li>
+</ul>
+<h4 id="验证命令">验证命令</h4>
+<pre><code>display interface GigabitEthernet 0/0/1
+display cpu-usage
+display ip routing-table</code></pre>
+<h4 id="修复动作">修复动作</h4>
+<ul>
+<li>看接口丢弃与利用率</li>
+<li>检查大流量是否挤占链路</li>
+<li>验证路径是否绕远</li>
+<li>检查队列/QoS 策略</li>
+</ul>
+<h3 id="场景-18高峰期偶发中断">场景 18：高峰期偶发中断</h3>
+<h4 id="常见思路">常见思路</h4>
+<ul>
+<li>查链路是否拥塞</li>
+<li>查 STP/OSPF/BGP 是否频繁重收敛</li>
+<li>查设备 CPU/内存是否打满</li>
+<li>查是否有环路或广播风暴</li>
+</ul>
+<hr>
+<h2 id="12-变更后的故障">12. 变更后的故障</h2>
+<h3 id="场景-19改完配置后全网部分异常">场景 19：改完配置后全网部分异常</h3>
+<h4 id="高级处理流程">高级处理流程</h4>
+<ol>
+<li>先冻结变更</li>
+<li>记录故障时间点</li>
+<li>对比变更前后配置</li>
+<li>确认是否需要回退</li>
+</ol>
+<h4 id="建议命令">建议命令</h4>
+<pre><code>display current-configuration
+display logbuffer
+display saved-configuration</code></pre>
+<h4 id="专家技巧">专家技巧</h4>
+<ul>
+<li>网络故障很多不是技术不懂，而是变更控制差</li>
+<li>高级工程师一定要有“变更前基线、变更中验证、变更后回退预案”</li>
+</ul>
+<hr>
+<h2 id="13-排障模板">13. 排障模板</h2>
+<p>建议你以后每次故障都按这个模板记录：</p>
+<h3 id="故障记录模板">故障记录模板</h3>
+<table><thead><tr><th>项目</th><th>内容</th></tr></thead><tbody><tr><td>故障时间</td><td></td></tr><tr><td>影响范围</td><td></td></tr><tr><td>业务现象</td><td></td></tr><tr><td>最近变更</td><td></td></tr><tr><td>初步判断层次</td><td>物理/二层/三层/应用</td></tr><tr><td>核心命令输出</td><td></td></tr><tr><td>根因分析</td><td></td></tr><tr><td>修复动作</td><td></td></tr><tr><td>回退动作</td><td></td></tr><tr><td>复盘结论</td><td></td></tr></tbody></table>
+<hr>
+<h2 id="14-高级专家的故障思维">14. 高级专家的故障思维</h2>
+<h3 id="141-永远先问最小闭环">14.1 永远先问“最小闭环”</h3>
+<p>例如跨 VLAN 不通，不要一上来就查全网。 先看：</p>
+<ul>
+<li>PC IP 对不对</li>
+<li>网关 Vlanif 对不对</li>
+<li>同交换机是否可达</li>
+<li>再扩大到 trunk、路由、策略</li>
+</ul>
+<h3 id="142-学会缩圈">14.2 学会“缩圈”</h3>
+<p>排障不是一次定位，是不断缩小问题范围：</p>
+<ol>
+<li>是主机问题还是网络问题</li>
+<li>是接入问题还是骨干问题</li>
+<li>是单点问题还是全局问题</li>
+<li>是控制面问题还是数据面问题</li>
+</ol>
+<h3 id="143-高级技巧">14.3 高级技巧</h3>
+<ul>
+<li>任何故障都先看“最近变更”</li>
+<li>任何协议都要有“邻居、路由、转发”三视角</li>
+<li>任何业务都要有“去程、回程”双向思维</li>
+<li>任何现象都要区分“完全不通”和“部分不通”</li>
+</ul>
+<hr>
+<h2 id="15-常用排障命令索引">15. 常用排障命令索引</h2>
+<table><thead><tr><th>类别</th><th>命令</th></tr></thead><tbody><tr><td>接口</td><td><code>display interface brief</code></td></tr><tr><td>IP 接口</td><td><code>display ip interface brief</code></td></tr><tr><td>VLAN</td><td><code>display vlan</code></td></tr><tr><td>MAC</td><td><code>display mac-address</code></td></tr><tr><td>STP</td><td><code>display stp brief</code></td></tr><tr><td>路由</td><td><code>display ip routing-table</code></td></tr><tr><td>OSPF</td><td><code>display ospf peer</code> <code>display ospf routing</code></td></tr><tr><td>BGP</td><td><code>display bgp peer</code> <code>display bgp routing-table</code></td></tr><tr><td>MPLS</td><td><code>display mpls ldp session</code> <code>display mpls forwarding-table</code></td></tr><tr><td>NAT</td><td><code>display nat session all</code></td></tr><tr><td>DHCP</td><td><code>display ip pool</code></td></tr><tr><td>CPU</td><td><code>display cpu-usage</code></td></tr><tr><td>日志</td><td><code>display logbuffer</code></td></tr></tbody></table>
+<hr>
+<h2 id="16-结语">16. 结语</h2>
+<p>真正的高级网络专家，不是“知道很多命令”，而是：</p>
+<ul>
+<li>看到现象就知道从哪一层切入</li>
+<li>不被表象带偏</li>
+<li>能快速缩小范围</li>
+<li>能把排障过程讲清楚</li>
+<li>能把临时修复转化成长期优化</li>
+</ul>
+<p>学网络到后面，拼的是：</p>
+<ul>
+<li>方法</li>
+<li>稳定性</li>
+<li>结构化思维</li>
+<li>复盘能力</li>
+</ul>
+<p>如果你把这份手册配合实验一天一天过，你会明显从“会配设备”进入“会排网络问题”的阶段。</p>
+          <nav class="pager"><a href="华为HCIE_Datacom_实验命令参考.html"><span class="pager-label">上一页</span>华为 HCIE-Datacom 实验命令参考</a><a href="华为HCIE_Datacom_综合实验案例手册.html"><span class="pager-label">下一页</span>华为 HCIE-Datacom 综合实验案例手册</a></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

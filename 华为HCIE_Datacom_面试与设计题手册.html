@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 面试与项目设计题手册</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-面试与项目设计题手册" class="lv1" data-title="华为 HCIE-Datacom 面试与项目设计题手册">华为 HCIE-Datacom 面试与项目设计题手册</a><a href="#1-高级网络岗位最看重什么" class="lv2" data-title="1. 高级网络岗位最看重什么">1. 高级网络岗位最看重什么</a><a href="#2-高频面试题" class="lv2" data-title="2. 高频面试题">2. 高频面试题</a><a href="#21-基础原理题" class="lv3" data-title="2.1 基础原理题">2.1 基础原理题</a><a href="#问vlan-的本质是什么" class="lv4" data-title="问：VLAN 的本质是什么？">问：VLAN 的本质是什么？</a><a href="#问为什么要用-stp" class="lv4" data-title="问：为什么要用 STP？">问：为什么要用 STP？</a><a href="#问静态路由和-ospf-的差别" class="lv4" data-title="问：静态路由和 OSPF 的差别？">问：静态路由和 OSPF 的差别？</a><a href="#3-bgp-mpls-evpn-高频题" class="lv2" data-title="3. BGP / MPLS / EVPN 高频题">3. BGP / MPLS / EVPN 高频题</a><a href="#问为什么企业双出口一般会用-bgp" class="lv3" data-title="问：为什么企业双出口一般会用 BGP？">问：为什么企业双出口一般会用 BGP？</a><a href="#问mpls-l3vpn-为什么要-rd-和-rt" class="lv3" data-title="问：MPLS L3VPN 为什么要 RD 和 RT？">问：MPLS L3VPN 为什么要 RD 和 RT？</a><a href="#问为什么现在很多园区从传统-vlan-演进到-vxlanevpn" class="lv3" data-title="问：为什么现在很多园区从传统 VLAN 演进到 VXLAN/EVPN？">问：为什么现在很多园区从传统 VLAN 演进到 VXLAN/EVPN？</a><a href="#4-项目设计题答题模板" class="lv2" data-title="4. 项目设计题答题模板">4. 项目设计题答题模板</a><a href="#通用模板" class="lv3" data-title="通用模板">通用模板</a><a href="#示例总部-分支园区网络设计" class="lv3" data-title="示例：总部 + 分支园区网络设计">示例：总部 + 分支园区网络设计</a><a href="#题目" class="lv4" data-title="题目">题目</a><a href="#标准答法" class="lv4" data-title="标准答法">标准答法</a><a href="#5-设计题里的取舍思维" class="lv2" data-title="5. 设计题里的取舍思维">5. 设计题里的取舍思维</a><a href="#51-地址规划怎么答" class="lv3" data-title="5.1 地址规划怎么答">5.1 地址规划怎么答</a><a href="#52-网关位置怎么答" class="lv3" data-title="5.2 网关位置怎么答">5.2 网关位置怎么答</a><a href="#53-为什么不用单一大二层" class="lv3" data-title="5.3 为什么不用单一大二层">5.3 为什么不用单一大二层</a><a href="#6-面试时怎么讲项目" class="lv2" data-title="6. 面试时怎么讲项目">6. 面试时怎么讲项目</a><a href="#推荐结构" class="lv3" data-title="推荐结构">推荐结构</a><a href="#示例表达" class="lv3" data-title="示例表达">示例表达</a><a href="#7-高级表达技巧" class="lv2" data-title="7. 高级表达技巧">7. 高级表达技巧</a><a href="#技巧-1把技术词翻译成业务词" class="lv3" data-title="技巧 1：把技术词翻译成业务词">技巧 1：把技术词翻译成业务词</a><a href="#技巧-2回答时要有取舍" class="lv3" data-title="技巧 2：回答时要有取舍">技巧 2：回答时要有取舍</a><a href="#技巧-3把失败讲出来" class="lv3" data-title="技巧 3：把失败讲出来">技巧 3：把失败讲出来</a><a href="#8-设计题训练清单" class="lv2" data-title="8. 设计题训练清单">8. 设计题训练清单</a><a href="#9-最后的建议" class="lv2" data-title="9. 最后的建议">9. 最后的建议</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 面试与项目设计题手册</h1>
+          <p class="subtitle">目标：帮助你从“会做实验”提升到“会讲方案、会答面试、会做设计取舍”。</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-面试与项目设计题手册">华为 HCIE-Datacom 面试与项目设计题手册</h1>
+<p>目标：帮助你从“会做实验”提升到“会讲方案、会答面试、会做设计取舍”。</p>
+<hr>
+<h2 id="1-高级网络岗位最看重什么">1. 高级网络岗位最看重什么</h2>
+<p>面试官通常不是只看你会不会命令，而是看你是否具备：</p>
+<ul>
+<li>原理理解能力</li>
+<li>架构设计能力</li>
+<li>故障排查能力</li>
+<li>项目交付能力</li>
+<li>自动化与运维思维</li>
+<li>沟通与表达能力</li>
+</ul>
+<p>回答任何问题，尽量按这个顺序：</p>
+<ol>
+<li>先说场景</li>
+<li>再说原理</li>
+<li>再说方案</li>
+<li>再说风险</li>
+<li>再说验证与运维</li>
+</ol>
+<hr>
+<h2 id="2-高频面试题">2. 高频面试题</h2>
+<h3 id="21-基础原理题">2.1 基础原理题</h3>
+<h4 id="问vlan-的本质是什么">问：VLAN 的本质是什么？</h4>
+<p>答题框架：</p>
+<ul>
+<li>VLAN 的本质是逻辑划分广播域</li>
+<li>它不改变物理拓扑，但改变二层广播边界</li>
+<li>典型作用是隔离业务、控制广播、方便管理</li>
+<li>真正工程价值在于：把用户/业务和物理端口解耦</li>
+</ul>
+<h4 id="问为什么要用-stp">问：为什么要用 STP？</h4>
+<p>答题框架：</p>
+<ul>
+<li>二层冗余会带来环路</li>
+<li>环路会导致广播风暴、MAC 地址表震荡、重复报文</li>
+<li>STP 通过阻塞部分链路，构建无环拓扑</li>
+<li>工程上要结合 Eth-Trunk、MSTP、网关位置一起看</li>
+</ul>
+<h4 id="问静态路由和-ospf-的差别">问：静态路由和 OSPF 的差别？</h4>
+<p>答题框架：</p>
+<ul>
+<li>静态路由简单、可控、开销低，但扩展性差</li>
+<li>OSPF 适合中大型内部网络，支持动态收敛和层级设计</li>
+<li>小网络可优先静态，大中型园区和骨干通常使用 OSPF</li>
+</ul>
+<hr>
+<h2 id="3-bgp-mpls-evpn-高频题">3. BGP / MPLS / EVPN 高频题</h2>
+<h3 id="问为什么企业双出口一般会用-bgp">问：为什么企业双出口一般会用 BGP？</h3>
+<p>答题框架：</p>
+<ul>
+<li>多出口场景需要更灵活的路径控制</li>
+<li>BGP 可以通过 Local Preference、AS-Path、MED、Community 控制选路</li>
+<li>它适合大规模和策略化路由控制</li>
+<li>真正价值不是“能通”，而是“可运营、可调优、可扩展”</li>
+</ul>
+<h3 id="问mpls-l3vpn-为什么要-rd-和-rt">问：MPLS L3VPN 为什么要 RD 和 RT？</h3>
+<p>答题框架：</p>
+<ul>
+<li>RD 用来保证 VPNv4 路由全局唯一</li>
+<li>RT 用来控制路由导入导出策略</li>
+<li>RD 解决“唯一性”，RT 解决“策略性”</li>
+</ul>
+<h3 id="问为什么现在很多园区从传统-vlan-演进到-vxlanevpn">问：为什么现在很多园区从传统 VLAN 演进到 VXLAN/EVPN？</h3>
+<p>答题框架：</p>
+<ul>
+<li>传统园区广播域和策略容易受物理拓扑限制</li>
+<li>VXLAN/EVPN 支持 Overlay 封装，提升扩展性</li>
+<li>更适合多园区、虚拟化、统一策略和自动化运维</li>
+<li>重点不只是“新技术”，而是解决原架构痛点</li>
+</ul>
+<hr>
+<h2 id="4-项目设计题答题模板">4. 项目设计题答题模板</h2>
+<h3 id="通用模板">通用模板</h3>
+<ol>
+<li>业务背景</li>
+<li>现网问题</li>
+<li>约束条件</li>
+<li>候选方案</li>
+<li>最终方案与原因</li>
+<li>风险点</li>
+<li>验证方法</li>
+<li>运维建议</li>
+</ol>
+<h3 id="示例总部-分支园区网络设计">示例：总部 + 分支园区网络设计</h3>
+<h4 id="题目">题目</h4>
+<p>某企业有 1 个总部、5 个分支、3000 用户，需要设计园区与广域一体化网络。</p>
+<h4 id="标准答法">标准答法</h4>
+<p>业务背景：</p>
+<ul>
+<li>总部有办公、研发、视频会议、访客接入</li>
+<li>分支需要访问总部业务和 Internet</li>
+</ul>
+<p>现网问题：</p>
+<ul>
+<li>传统二层扩展复杂</li>
+<li>多分支管理成本高</li>
+<li>认证、策略不统一</li>
+</ul>
+<p>约束条件：</p>
+<ul>
+<li>预算有限</li>
+<li>需要分阶段割接</li>
+<li>必须高可用</li>
+</ul>
+<p>方案建议：</p>
+<ul>
+<li>园区采用三层架构或 VXLAN/EVPN 架构</li>
+<li>广域采用 SD-WAN 或 MPLS+Internet 混合</li>
+<li>总部统一认证与策略下发</li>
+<li>核心节点双机冗余</li>
+</ul>
+<p>风险点：</p>
+<ul>
+<li>地址规划冲突</li>
+<li>策略变更影响用户</li>
+<li>广域链路切换异常</li>
+</ul>
+<p>验证方法：</p>
+<ul>
+<li>连通性验证</li>
+<li>路由验证</li>
+<li>认证验证</li>
+<li>故障切换验证</li>
+</ul>
+<p>运维建议：</p>
+<ul>
+<li>建立配置基线</li>
+<li>自动化巡检</li>
+<li>日志与性能可视化</li>
+</ul>
+<hr>
+<h2 id="5-设计题里的取舍思维">5. 设计题里的取舍思维</h2>
+<h3 id="51-地址规划怎么答">5.1 地址规划怎么答</h3>
+<p>优秀答案不是只给网段，而是要说明：</p>
+<ul>
+<li>按组织还是按楼层规划</li>
+<li>是否预留扩容空间</li>
+<li>是否为管理、无线、访客独立规划</li>
+</ul>
+<h3 id="52-网关位置怎么答">5.2 网关位置怎么答</h3>
+<p>常见说法：</p>
+<ul>
+<li>小规模接入可放汇聚</li>
+<li>大型园区或 Overlay 更倾向网关下沉或分布式网关</li>
+<li>关键是看流量模型、收敛需求和管理复杂度</li>
+</ul>
+<h3 id="53-为什么不用单一大二层">5.3 为什么不用单一大二层</h3>
+<p>答法：</p>
+<ul>
+<li>广播域过大</li>
+<li>收敛和故障域不可控</li>
+<li>运维复杂</li>
+<li>不利于规模扩展</li>
+</ul>
+<hr>
+<h2 id="6-面试时怎么讲项目">6. 面试时怎么讲项目</h2>
+<h3 id="推荐结构">推荐结构</h3>
+<ol>
+<li>项目背景</li>
+<li>你的职责</li>
+<li>网络规模</li>
+<li>技术难点</li>
+<li>你的设计思路</li>
+<li>你怎么验证</li>
+<li>出过什么问题，你怎么解决</li>
+<li>项目复盘</li>
+</ol>
+<h3 id="示例表达">示例表达</h3>
+<p>不要说：</p>
+<ul>
+<li>“我配了 OSPF、BGP、ACL”</li>
+</ul>
+<p>要说：</p>
+<ul>
+<li>“项目中总部与分支双出口场景需要主备和业务分流，我采用 OSPF 承载内部路由、BGP 处理出口选路，并通过策略控制视频流量优先，最终把链路切换时延压缩到业务可接受范围。”</li>
+</ul>
+<hr>
+<h2 id="7-高级表达技巧">7. 高级表达技巧</h2>
+<h3 id="技巧-1把技术词翻译成业务词">技巧 1：把技术词翻译成业务词</h3>
+<ul>
+<li>OSPF 收敛快 -&gt; 业务恢复快</li>
+<li>VXLAN/EVPN -&gt; 架构更易扩展</li>
+<li>自动化巡检 -&gt; 降低人工风险</li>
+</ul>
+<h3 id="技巧-2回答时要有取舍">技巧 2：回答时要有取舍</h3>
+<p>面试官更喜欢听到：</p>
+<ul>
+<li>为什么选 A，不选 B</li>
+<li>A 的优势是什么，代价是什么</li>
+</ul>
+<h3 id="技巧-3把失败讲出来">技巧 3：把失败讲出来</h3>
+<p>高级工程师不是没出过问题，而是：</p>
+<ul>
+<li>发现得快</li>
+<li>定位得准</li>
+<li>复盘得清</li>
+</ul>
+<hr>
+<h2 id="8-设计题训练清单">8. 设计题训练清单</h2>
+<p>你可以练这 10 个题：</p>
+<ol>
+<li>100 人小型办公网设计</li>
+<li>1000 人园区三层架构设计</li>
+<li>双出口 Internet 设计</li>
+<li>总部 + 5 分支 WAN 设计</li>
+<li>园区无线接入与访客隔离设计</li>
+<li>MPLS VPN 承载多租户设计</li>
+<li>VXLAN/EVPN 园区升级设计</li>
+<li>高可用网关与链路冗余设计</li>
+<li>认证与准入控制设计</li>
+<li>自动化巡检体系设计</li>
+</ol>
+<hr>
+<h2 id="9-最后的建议">9. 最后的建议</h2>
+<p>如果你想成为高级网络专家，必须做到：</p>
+<ul>
+<li>能把复杂方案讲得清楚</li>
+<li>能说清为什么这么设计</li>
+<li>能说清风险和回退</li>
+<li>能把技术和业务连接起来</li>
+</ul>
+<p>这比单纯背命令更重要。</p>
+          <nav class="pager"><a href="华为HCIE_Datacom_自动化脚本实战手册.html"><span class="pager-label">上一页</span>华为 HCIE-Datacom 自动化脚本实战手册</a><span><span class="pager-label">下一页</span>已经是最后一页</span></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

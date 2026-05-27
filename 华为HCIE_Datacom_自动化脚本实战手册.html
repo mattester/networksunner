@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 自动化脚本实战手册</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-自动化脚本实战手册" class="lv1" data-title="华为 HCIE-Datacom 自动化脚本实战手册">华为 HCIE-Datacom 自动化脚本实战手册</a><a href="#1-自动化学习顺序" class="lv2" data-title="1. 自动化学习顺序">1. 自动化学习顺序</a><a href="#2-环境准备" class="lv2" data-title="2. 环境准备">2. 环境准备</a><a href="#3-脚本-1批量登录并执行命令" class="lv2" data-title="3. 脚本 1：批量登录并执行命令">3. 脚本 1：批量登录并执行命令</a><a href="#作用" class="lv3" data-title="作用">作用</a><a href="#你要学会什么" class="lv3" data-title="你要学会什么">你要学会什么</a><a href="#4-脚本-2批量备份配置" class="lv2" data-title="4. 脚本 2：批量备份配置">4. 脚本 2：批量备份配置</a><a href="#工程价值" class="lv3" data-title="工程价值">工程价值</a><a href="#5-脚本-3巡检-ospf-邻居" class="lv2" data-title="5. 脚本 3：巡检 OSPF 邻居">5. 脚本 3：巡检 OSPF 邻居</a><a href="#价值" class="lv3" data-title="价值">价值</a><a href="#6-脚本-4巡检-bgp-邻居" class="lv2" data-title="6. 脚本 4：巡检 BGP 邻居">6. 脚本 4：巡检 BGP 邻居</a><a href="#7-脚本-5生成巡检报告" class="lv2" data-title="7. 脚本 5：生成巡检报告">7. 脚本 5：生成巡检报告</a><a href="#价值" class="lv3" data-title="价值">价值</a><a href="#8-自动化训练思路" class="lv2" data-title="8. 自动化训练思路">8. 自动化训练思路</a><a href="#81-从小脚本开始" class="lv3" data-title="8.1 从小脚本开始">8.1 从小脚本开始</a><a href="#82-再做工程化" class="lv3" data-title="8.2 再做工程化">8.2 再做工程化</a><a href="#9-高级技巧" class="lv2" data-title="9. 高级技巧">9. 高级技巧</a><a href="#技巧-1把脚本和排障结合" class="lv3" data-title="技巧 1：把脚本和排障结合">技巧 1：把脚本和排障结合</a><a href="#技巧-2先做只读再做写入" class="lv3" data-title="技巧 2：先做只读，再做写入">技巧 2：先做只读，再做写入</a><a href="#技巧-3输出可读结果" class="lv3" data-title="技巧 3：输出可读结果">技巧 3：输出可读结果</a><a href="#10-自动化面试怎么讲" class="lv2" data-title="10. 自动化面试怎么讲">10. 自动化面试怎么讲</a><a href="#11-下一步学习建议" class="lv2" data-title="11. 下一步学习建议">11. 下一步学习建议</a><a href="#12-结语" class="lv2" data-title="12. 结语">12. 结语</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 自动化脚本实战手册</h1>
+          <p class="subtitle">目标：帮助你从零开始建立网络自动化能力。</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-自动化脚本实战手册">华为 HCIE-Datacom 自动化脚本实战手册</h1>
+<p>目标：帮助你从零开始建立网络自动化能力。 定位：不是为了炫 Python，而是让你把重复巡检、备份、校验、报表做成可复用工具。</p>
+<hr>
+<h2 id="1-自动化学习顺序">1. 自动化学习顺序</h2>
+<p>建议按这个顺序学：</p>
+<ol>
+<li>Python 基础</li>
+<li>文件操作</li>
+<li>CSV / JSON</li>
+<li>Paramiko 批量登录</li>
+<li>批量备份配置</li>
+<li>巡检脚本</li>
+<li>结果比对</li>
+<li>NETCONF / RESTCONF</li>
+<li>API 自动化</li>
+</ol>
+<hr>
+<h2 id="2-环境准备">2. 环境准备</h2>
+<p>安装：</p>
+<pre><code>pip install paramiko</code></pre>
+<p>准备一个 <code>devices.csv</code>：</p>
+<pre><code>host,username,password
+192.168.1.1,admin,Admin@123
+192.168.1.2,admin,Admin@123</code></pre>
+<hr>
+<h2 id="3-脚本-1批量登录并执行命令">3. 脚本 1：批量登录并执行命令</h2>
+<pre><code>import csv
+import paramiko
+
+COMMAND = &quot;display ip interface brief\n&quot;
+
+with open(&quot;devices.csv&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        host = row[&quot;host&quot;]
+        username = row[&quot;username&quot;]
+        password = row[&quot;password&quot;]
+        print(f&quot;== {host} ==&quot;)
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(host, username=username, password=password, timeout=5)
+            shell = ssh.invoke_shell()
+            shell.send(COMMAND)
+            output = shell.recv(65535).decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+            print(output)
+            ssh.close()
+        except Exception as e:
+            print(f&quot;{host} failed: {e}&quot;)</code></pre>
+<h3 id="作用">作用</h3>
+<ul>
+<li>批量执行 display 命令</li>
+<li>获取基本接口状态</li>
+</ul>
+<h3 id="你要学会什么">你要学会什么</h3>
+<ul>
+<li>CSV 读取</li>
+<li>Paramiko 登录</li>
+<li>输出收集</li>
+</ul>
+<hr>
+<h2 id="4-脚本-2批量备份配置">4. 脚本 2：批量备份配置</h2>
+<pre><code>import csv
+import os
+import paramiko
+from datetime import datetime
+
+BACKUP_DIR = &quot;backup_configs&quot;
+os.makedirs(BACKUP_DIR, exist_ok=True)
+
+with open(&quot;devices.csv&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        host = row[&quot;host&quot;]
+        username = row[&quot;username&quot;]
+        password = row[&quot;password&quot;]
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(host, username=username, password=password, timeout=5)
+            shell = ssh.invoke_shell()
+            shell.send(&quot;display current-configuration\n&quot;)
+            output = shell.recv(200000).decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+            filename = f&quot;{host}_{datetime.now().strftime(&#x27;%Y%m%d_%H%M%S&#x27;)}.txt&quot;
+            with open(os.path.join(BACKUP_DIR, filename), &quot;w&quot;, encoding=&quot;utf-8&quot;) as fw:
+                fw.write(output)
+            ssh.close()
+            print(f&quot;{host} backup ok&quot;)
+        except Exception as e:
+            print(f&quot;{host} backup failed: {e}&quot;)</code></pre>
+<h3 id="工程价值">工程价值</h3>
+<ul>
+<li>变更前基线备份</li>
+<li>故障后对比配置</li>
+<li>审计与回退准备</li>
+</ul>
+<hr>
+<h2 id="5-脚本-3巡检-ospf-邻居">5. 脚本 3：巡检 OSPF 邻居</h2>
+<pre><code>import csv
+import paramiko
+
+def get_output(host, username, password, command):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(host, username=username, password=password, timeout=5)
+    shell = ssh.invoke_shell()
+    shell.send(command + &quot;\n&quot;)
+    output = shell.recv(65535).decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+    ssh.close()
+    return output
+
+with open(&quot;devices.csv&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        output = get_output(row[&quot;host&quot;], row[&quot;username&quot;], row[&quot;password&quot;], &quot;display ospf peer&quot;)
+        if &quot;Full&quot; in output:
+            print(f&quot;{row[&#x27;host&#x27;]} OSPF OK&quot;)
+        else:
+            print(f&quot;{row[&#x27;host&#x27;]} OSPF CHECK&quot;)</code></pre>
+<h3 id="价值">价值</h3>
+<ul>
+<li>快速识别邻居异常</li>
+<li>适合日常巡检</li>
+</ul>
+<hr>
+<h2 id="6-脚本-4巡检-bgp-邻居">6. 脚本 4：巡检 BGP 邻居</h2>
+<pre><code>import csv
+import paramiko
+
+def check_bgp(output):
+    if &quot;Established&quot; in output:
+        return &quot;OK&quot;
+    return &quot;CHECK&quot;
+
+with open(&quot;devices.csv&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        host = row[&quot;host&quot;]
+        username = row[&quot;username&quot;]
+        password = row[&quot;password&quot;]
+        try:
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(host, username=username, password=password, timeout=5)
+            shell = ssh.invoke_shell()
+            shell.send(&quot;display bgp peer\n&quot;)
+            output = shell.recv(65535).decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)
+            print(host, check_bgp(output))
+            ssh.close()
+        except Exception as e:
+            print(host, &quot;FAILED&quot;, e)</code></pre>
+<hr>
+<h2 id="7-脚本-5生成巡检报告">7. 脚本 5：生成巡检报告</h2>
+<pre><code>import csv
+
+rows = [
+    {&quot;host&quot;: &quot;192.168.1.1&quot;, &quot;ospf&quot;: &quot;OK&quot;, &quot;bgp&quot;: &quot;OK&quot;},
+    {&quot;host&quot;: &quot;192.168.1.2&quot;, &quot;ospf&quot;: &quot;CHECK&quot;, &quot;bgp&quot;: &quot;OK&quot;},
+]
+
+with open(&quot;report.csv&quot;, &quot;w&quot;, newline=&quot;&quot;, encoding=&quot;utf-8&quot;) as f:
+    writer = csv.DictWriter(f, fieldnames=[&quot;host&quot;, &quot;ospf&quot;, &quot;bgp&quot;])
+    writer.writeheader()
+    writer.writerows(rows)</code></pre>
+<h3 id="价值">价值</h3>
+<ul>
+<li>从“能执行命令”走向“可交付结果”</li>
+</ul>
+<hr>
+<h2 id="8-自动化训练思路">8. 自动化训练思路</h2>
+<h3 id="81-从小脚本开始">8.1 从小脚本开始</h3>
+<p>先写：</p>
+<ul>
+<li>读取文件</li>
+<li>输出设备清单</li>
+<li>登录一台设备</li>
+<li>登录多台设备</li>
+<li>执行一条命令</li>
+<li>执行多条命令</li>
+</ul>
+<h3 id="82-再做工程化">8.2 再做工程化</h3>
+<p>逐步加入：</p>
+<ul>
+<li>错误处理</li>
+<li>日志</li>
+<li>超时重试</li>
+<li>报表输出</li>
+<li>配置差异比对</li>
+</ul>
+<hr>
+<h2 id="9-高级技巧">9. 高级技巧</h2>
+<h3 id="技巧-1把脚本和排障结合">技巧 1：把脚本和排障结合</h3>
+<p>例如：</p>
+<ul>
+<li>批量查 OSPF 邻居</li>
+<li>批量查 BGP 邻居</li>
+<li>批量查接口 down</li>
+<li>批量查 CPU 高</li>
+</ul>
+<h3 id="技巧-2先做只读再做写入">技巧 2：先做只读，再做写入</h3>
+<p>顺序一定是：</p>
+<ol>
+<li>先做 show/display 自动化</li>
+<li>再做备份自动化</li>
+<li>最后再做配置下发自动化</li>
+</ol>
+<h3 id="技巧-3输出可读结果">技巧 3：输出可读结果</h3>
+<p>脚本不是给自己炫的，是给运维、团队、主管看的。 所以输出最好有：</p>
+<ul>
+<li>报告</li>
+<li>CSV</li>
+<li>Markdown</li>
+<li>清晰的异常标记</li>
+</ul>
+<hr>
+<h2 id="10-自动化面试怎么讲">10. 自动化面试怎么讲</h2>
+<p>你可以这样说：</p>
+<ul>
+<li>我不是单纯学 Python，而是围绕网络运维场景做自动化</li>
+<li>我做过配置备份、邻居巡检、接口巡检、异常报表</li>
+<li>自动化的价值在于降低重复人工操作风险，提高巡检效率</li>
+</ul>
+<hr>
+<h2 id="11-下一步学习建议">11. 下一步学习建议</h2>
+<p>当你掌握 Paramiko 之后，可以继续往这些方向进：</p>
+<ul>
+<li>NAPALM / Netmiko</li>
+<li>NETCONF / ncclient</li>
+<li>RESTCONF / requests</li>
+<li>YANG 模型</li>
+<li>Telemetry 数据采集</li>
+<li>Ansible for Network</li>
+</ul>
+<hr>
+<h2 id="12-结语">12. 结语</h2>
+<p>自动化不是额外技能，而是高级网络专家的必备能力。 真正拉开差距的是：</p>
+<ul>
+<li>你能不能把重复工作抽象出来</li>
+<li>你能不能把经验写成脚本</li>
+<li>你能不能让网络运维更稳定、更可控</li>
+</ul>
+          <nav class="pager"><a href="华为HCIE_Datacom_综合实验案例手册.html"><span class="pager-label">上一页</span>华为 HCIE-Datacom 综合实验案例手册</a><a href="华为HCIE_Datacom_面试与设计题手册.html"><span class="pager-label">下一页</span>华为 HCIE-Datacom 面试与项目设计题手册</a></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

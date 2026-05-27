@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 实验命令参考</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-实验命令参考" class="lv1" data-title="华为 HCIE-Datacom 实验命令参考">华为 HCIE-Datacom 实验命令参考</a><a href="#1-通用操作" class="lv2" data-title="1. 通用操作">1. 通用操作</a><a href="#11-进入系统视图" class="lv3" data-title="1.1 进入系统视图">1.1 进入系统视图</a><a href="#12-修改设备名" class="lv3" data-title="1.2 修改设备名">1.2 修改设备名</a><a href="#13-查看当前配置" class="lv3" data-title="1.3 查看当前配置">1.3 查看当前配置</a><a href="#14-保存配置" class="lv3" data-title="1.4 保存配置">1.4 保存配置</a><a href="#15-查看接口摘要" class="lv3" data-title="1.5 查看接口摘要">1.5 查看接口摘要</a><a href="#2-基础-ip-与接口" class="lv2" data-title="2. 基础 IP 与接口">2. 基础 IP 与接口</a><a href="#21-配置三层接口-ip" class="lv3" data-title="2.1 配置三层接口 IP">2.1 配置三层接口 IP</a><a href="#22-配置-loopback" class="lv3" data-title="2.2 配置 Loopback">2.2 配置 Loopback</a><a href="#23-关闭开启接口" class="lv3" data-title="2.3 关闭/开启接口">2.3 关闭/开启接口</a><a href="#24-验证" class="lv3" data-title="2.4 验证">2.4 验证</a><a href="#3-vlan-access-trunk-vlanif" class="lv2" data-title="3. VLAN / Access / Trunk / Vlanif">3. VLAN / Access / Trunk / Vlanif</a><a href="#31-创建-vlan" class="lv3" data-title="3.1 创建 VLAN">3.1 创建 VLAN</a><a href="#32-access-接口加入-vlan" class="lv3" data-title="3.2 Access 接口加入 VLAN">3.2 Access 接口加入 VLAN</a><a href="#33-trunk-接口放行-vlan" class="lv3" data-title="3.3 Trunk 接口放行 VLAN">3.3 Trunk 接口放行 VLAN</a><a href="#34-配置-vlanif-网关" class="lv3" data-title="3.4 配置 VLANIF 网关">3.4 配置 VLANIF 网关</a><a href="#35-验证" class="lv3" data-title="3.5 验证">3.5 验证</a><a href="#4-stp-mstp" class="lv2" data-title="4. STP / MSTP">4. STP / MSTP</a><a href="#41-启用-stp" class="lv3" data-title="4.1 启用 STP">4.1 启用 STP</a><a href="#42-配置根桥优先级" class="lv3" data-title="4.2 配置根桥优先级">4.2 配置根桥优先级</a><a href="#43-配置-mstp-区域" class="lv3" data-title="4.3 配置 MSTP 区域">4.3 配置 MSTP 区域</a><a href="#44-验证" class="lv3" data-title="4.4 验证">4.4 验证</a><a href="#5-eth-trunk-链路聚合" class="lv2" data-title="5. Eth-Trunk 链路聚合">5. Eth-Trunk 链路聚合</a><a href="#51-创建聚合组" class="lv3" data-title="5.1 创建聚合组">5.1 创建聚合组</a><a href="#52-成员接口加入聚合组" class="lv3" data-title="5.2 成员接口加入聚合组">5.2 成员接口加入聚合组</a><a href="#53-聚合口配置-trunk" class="lv3" data-title="5.3 聚合口配置 Trunk">5.3 聚合口配置 Trunk</a><a href="#54-验证" class="lv3" data-title="5.4 验证">5.4 验证</a><a href="#6-静态路由与缺省路由" class="lv2" data-title="6. 静态路由与缺省路由">6. 静态路由与缺省路由</a><a href="#61-配置静态路由" class="lv3" data-title="6.1 配置静态路由">6.1 配置静态路由</a><a href="#62-配置缺省路由" class="lv3" data-title="6.2 配置缺省路由">6.2 配置缺省路由</a><a href="#63-浮动静态" class="lv3" data-title="6.3 浮动静态">6.3 浮动静态</a><a href="#64-验证" class="lv3" data-title="6.4 验证">6.4 验证</a><a href="#7-ospf" class="lv2" data-title="7. OSPF">7. OSPF</a><a href="#71-启动-ospf-进程" class="lv3" data-title="7.1 启动 OSPF 进程">7.1 启动 OSPF 进程</a><a href="#72-宣告网段" class="lv3" data-title="7.2 宣告网段">7.2 宣告网段</a><a href="#73-配置认证示例" class="lv3" data-title="7.3 配置认证（示例）">7.3 配置认证（示例）</a><a href="#74-传播缺省路由" class="lv3" data-title="7.4 传播缺省路由">7.4 传播缺省路由</a><a href="#75-路由引入" class="lv3" data-title="7.5 路由引入">7.5 路由引入</a><a href="#76-验证" class="lv3" data-title="7.6 验证">7.6 验证</a><a href="#8-acl" class="lv2" data-title="8. ACL">8. ACL</a><a href="#81-基本-acl" class="lv3" data-title="8.1 基本 ACL">8.1 基本 ACL</a><a href="#82-高级-acl" class="lv3" data-title="8.2 高级 ACL">8.2 高级 ACL</a><a href="#83-接口调用-acl" class="lv3" data-title="8.3 接口调用 ACL">8.3 接口调用 ACL</a><a href="#84-验证" class="lv3" data-title="8.4 验证">8.4 验证</a><a href="#9-nat" class="lv2" data-title="9. NAT">9. NAT</a><a href="#91-easy-ip" class="lv3" data-title="9.1 Easy-IP">9.1 Easy-IP</a><a href="#92-napt-地址池部分平台" class="lv3" data-title="9.2 NAPT 地址池（部分平台）">9.2 NAPT 地址池（部分平台）</a><a href="#93-验证" class="lv3" data-title="9.3 验证">9.3 验证</a><a href="#10-dhcp" class="lv2" data-title="10. DHCP">10. DHCP</a><a href="#101-全局开启-dhcp" class="lv3" data-title="10.1 全局开启 DHCP">10.1 全局开启 DHCP</a><a href="#102-接口地址池发放" class="lv3" data-title="10.2 接口地址池发放">10.2 接口地址池发放</a><a href="#103-全局地址池" class="lv3" data-title="10.3 全局地址池">10.3 全局地址池</a><a href="#104-验证" class="lv3" data-title="10.4 验证">10.4 验证</a><a href="#11-ipv6-基础" class="lv2" data-title="11. IPv6 基础">11. IPv6 基础</a><a href="#111-开启-ipv6" class="lv3" data-title="11.1 开启 IPv6">11.1 开启 IPv6</a><a href="#112-接口配置-ipv6" class="lv3" data-title="11.2 接口配置 IPv6">11.2 接口配置 IPv6</a><a href="#113-静态-ipv6-路由" class="lv3" data-title="11.3 静态 IPv6 路由">11.3 静态 IPv6 路由</a><a href="#114-验证" class="lv3" data-title="11.4 验证">11.4 验证</a><a href="#12-bgp" class="lv2" data-title="12. BGP">12. BGP</a><a href="#121-建立-bgp-进程" class="lv3" data-title="12.1 建立 BGP 进程">12.1 建立 BGP 进程</a><a href="#122-配置-ebgp-邻居" class="lv3" data-title="12.2 配置 EBGP 邻居">12.2 配置 EBGP 邻居</a><a href="#123-宣告本地网段" class="lv3" data-title="12.3 宣告本地网段">12.3 宣告本地网段</a><a href="#124-配置-ibgp-邻居" class="lv3" data-title="12.4 配置 IBGP 邻居">12.4 配置 IBGP 邻居</a><a href="#125-next-hop-self" class="lv3" data-title="12.5 Next-Hop-Self">12.5 Next-Hop-Self</a><a href="#126-local-preferenceroute-policy" class="lv3" data-title="12.6 Local Preference（route-policy）">12.6 Local Preference（route-policy）</a><a href="#127-as-path-prependroute-policy" class="lv3" data-title="12.7 AS-Path Prepend（route-policy）">12.7 AS-Path Prepend（route-policy）</a><a href="#128-验证" class="lv3" data-title="12.8 验证">12.8 验证</a><a href="#13-mpls-ldp" class="lv2" data-title="13. MPLS / LDP">13. MPLS / LDP</a><a href="#131-开启-mpls" class="lv3" data-title="13.1 开启 MPLS">13.1 开启 MPLS</a><a href="#132-接口开启-mpls-ldp" class="lv3" data-title="13.2 接口开启 MPLS / LDP">13.2 接口开启 MPLS / LDP</a><a href="#133-启动-ldp" class="lv3" data-title="13.3 启动 LDP">13.3 启动 LDP</a><a href="#134-验证" class="lv3" data-title="13.4 验证">13.4 验证</a><a href="#14-mpls-l3vpn" class="lv2" data-title="14. MPLS L3VPN">14. MPLS L3VPN</a><a href="#141-创建-vpn-实例" class="lv3" data-title="14.1 创建 VPN 实例">14.1 创建 VPN 实例</a><a href="#142-接口绑定-vrf" class="lv3" data-title="14.2 接口绑定 VRF">14.2 接口绑定 VRF</a><a href="#143-建立-mp-bgp-vpnv4-邻居" class="lv3" data-title="14.3 建立 MP-BGP VPNv4 邻居">14.3 建立 MP-BGP VPNv4 邻居</a><a href="#144-ce-路由引入-vrf示例" class="lv3" data-title="14.4 CE 路由引入 VRF（示例）">14.4 CE 路由引入 VRF（示例）</a><a href="#145-验证" class="lv3" data-title="14.5 验证">14.5 验证</a><a href="#15-常用-display-命令总表" class="lv2" data-title="15. 常用 display 命令总表">15. 常用 display 命令总表</a><a href="#16-最重要的排障习惯" class="lv2" data-title="16. 最重要的排障习惯">16. 最重要的排障习惯</a><a href="#161-每次实验都按这个顺序查" class="lv3" data-title="16.1 每次实验都按这个顺序查">16.1 每次实验都按这个顺序查</a><a href="#162-每次改配置前做三件事" class="lv3" data-title="16.2 每次改配置前做三件事">16.2 每次改配置前做三件事</a><a href="#163-每次实验后做四件事" class="lv3" data-title="16.3 每次实验后做四件事">16.3 每次实验后做四件事</a><a href="#17-高阶模块提醒" class="lv2" data-title="17. 高阶模块提醒">17. 高阶模块提醒</a><a href="#18-官方参考链接" class="lv2" data-title="18. 官方参考链接">18. 官方参考链接</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 实验命令参考</h1>
+          <p class="subtitle">用途：配合 `华为HCIE_Datacom_学习手册.md` 与 `60天打卡表.csv` 使用</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-实验命令参考">华为 HCIE-Datacom 实验命令参考</h1>
+<p>用途：配合 <code>华为HCIE_Datacom_学习手册.md</code> 与 <code>60天打卡表.csv</code> 使用 适用范围：华为 VRP 风格设备命令参考 重要说明：</p>
+<ul>
+<li>不同产品线、VRP 版本、交换机/路由器系列之间命令会有细微差异</li>
+<li>本文偏向 Datacom 常见 VRP 语法</li>
+<li>高阶园区、CloudCampus、SRv6、NCE 自动化等部分，真实项目和考试环境应以当期官方文档和实验平台为准</li>
+</ul>
+<hr>
+<h2 id="1-通用操作">1. 通用操作</h2>
+<h3 id="11-进入系统视图">1.1 进入系统视图</h3>
+<pre><code>&lt;HUAWEI&gt; system-view
+[HUAWEI]</code></pre>
+<h3 id="12-修改设备名">1.2 修改设备名</h3>
+<pre><code>[HUAWEI] sysname AR1</code></pre>
+<h3 id="13-查看当前配置">1.3 查看当前配置</h3>
+<pre><code>&lt;HUAWEI&gt; display current-configuration
+&lt;HUAWEI&gt; display current-configuration interface GigabitEthernet 0/0/1</code></pre>
+<h3 id="14-保存配置">1.4 保存配置</h3>
+<pre><code>&lt;HUAWEI&gt; save</code></pre>
+<h3 id="15-查看接口摘要">1.5 查看接口摘要</h3>
+<pre><code>&lt;HUAWEI&gt; display ip interface brief
+&lt;HUAWEI&gt; display interface brief</code></pre>
+<hr>
+<h2 id="2-基础-ip-与接口">2. 基础 IP 与接口</h2>
+<h3 id="21-配置三层接口-ip">2.1 配置三层接口 IP</h3>
+<pre><code>[AR1] interface GigabitEthernet 0/0/0
+[AR1-GigabitEthernet0/0/0] ip address 192.168.1.1 24</code></pre>
+<h3 id="22-配置-loopback">2.2 配置 Loopback</h3>
+<pre><code>[AR1] interface LoopBack 0
+[AR1-LoopBack0] ip address 1.1.1.1 32</code></pre>
+<h3 id="23-关闭开启接口">2.3 关闭/开启接口</h3>
+<pre><code>[AR1-GigabitEthernet0/0/0] shutdown
+[AR1-GigabitEthernet0/0/0] undo shutdown</code></pre>
+<h3 id="24-验证">2.4 验证</h3>
+<pre><code>&lt;AR1&gt; display ip interface brief
+&lt;AR1&gt; display interface GigabitEthernet 0/0/0
+&lt;AR1&gt; ping 192.168.1.2</code></pre>
+<p>排障入口：</p>
+<ul>
+<li>接口是否 up/up</li>
+<li>IP 地址是否同网段</li>
+<li>对端接口是否打开</li>
+</ul>
+<hr>
+<h2 id="3-vlan-access-trunk-vlanif">3. VLAN / Access / Trunk / Vlanif</h2>
+<p>根据华为官方 VLAN 文档，<code>port link-type trunk</code>、<code>port trunk allow-pass vlan ...</code>、<code>port default vlan ...</code> 为核心配置命令。citeturn0search1turn0search3</p>
+<h3 id="31-创建-vlan">3.1 创建 VLAN</h3>
+<pre><code>[SW1] vlan batch 10 20 30</code></pre>
+<h3 id="32-access-接口加入-vlan">3.2 Access 接口加入 VLAN</h3>
+<pre><code>[SW1] interface GigabitEthernet 0/0/1
+[SW1-GigabitEthernet0/0/1] port link-type access
+[SW1-GigabitEthernet0/0/1] port default vlan 10</code></pre>
+<h3 id="33-trunk-接口放行-vlan">3.3 Trunk 接口放行 VLAN</h3>
+<pre><code>[SW1] interface GigabitEthernet 0/0/24
+[SW1-GigabitEthernet0/0/24] port link-type trunk
+[SW1-GigabitEthernet0/0/24] port trunk allow-pass vlan 10 20 30
+[SW1-GigabitEthernet0/0/24] port trunk pvid vlan 10</code></pre>
+<h3 id="34-配置-vlanif-网关">3.4 配置 VLANIF 网关</h3>
+<pre><code>[SW1] interface Vlanif 10
+[SW1-Vlanif10] ip address 192.168.10.254 24
+[SW1] interface Vlanif 20
+[SW1-Vlanif20] ip address 192.168.20.254 24</code></pre>
+<h3 id="35-验证">3.5 验证</h3>
+<pre><code>&lt;SW1&gt; display vlan
+&lt;SW1&gt; display port vlan
+&lt;SW1&gt; display ip interface brief
+&lt;SW1&gt; display mac-address</code></pre>
+<p>排障顺序：</p>
+<ol>
+<li>VLAN 是否创建</li>
+<li>接口链路类型对不对</li>
+<li>trunk 是否放行了目标 VLAN</li>
+<li>Vlanif 是否有 IP 且 up</li>
+<li>PC 网关是否正确</li>
+</ol>
+<hr>
+<h2 id="4-stp-mstp">4. STP / MSTP</h2>
+<h3 id="41-启用-stp">4.1 启用 STP</h3>
+<pre><code>[SW1] stp enable</code></pre>
+<h3 id="42-配置根桥优先级">4.2 配置根桥优先级</h3>
+<pre><code>[SW1] stp priority 4096
+[SW2] stp priority 8192</code></pre>
+<h3 id="43-配置-mstp-区域">4.3 配置 MSTP 区域</h3>
+<pre><code>[SW1] stp mode mstp
+[SW1] stp region-configuration
+[SW1-mst-region] region-name campus
+[SW1-mst-region] revision-level 1
+[SW1-mst-region] instance 1 vlan 10 20
+[SW1-mst-region] active region-configuration</code></pre>
+<h3 id="44-验证">4.4 验证</h3>
+<pre><code>&lt;SW1&gt; display stp brief
+&lt;SW1&gt; display stp
+&lt;SW1&gt; display stp interface GigabitEthernet 0/0/24</code></pre>
+<p>重点观察：</p>
+<ul>
+<li>根桥是谁</li>
+<li>根端口是谁</li>
+<li>是否有阻塞口</li>
+</ul>
+<hr>
+<h2 id="5-eth-trunk-链路聚合">5. Eth-Trunk 链路聚合</h2>
+<h3 id="51-创建聚合组">5.1 创建聚合组</h3>
+<pre><code>[SW1] interface Eth-Trunk 1
+[SW1-Eth-Trunk1] mode lacp-static</code></pre>
+<h3 id="52-成员接口加入聚合组">5.2 成员接口加入聚合组</h3>
+<pre><code>[SW1] interface GigabitEthernet 0/0/23
+[SW1-GigabitEthernet0/0/23] eth-trunk 1
+[SW1] interface GigabitEthernet 0/0/24
+[SW1-GigabitEthernet0/0/24] eth-trunk 1</code></pre>
+<h3 id="53-聚合口配置-trunk">5.3 聚合口配置 Trunk</h3>
+<pre><code>[SW1] interface Eth-Trunk 1
+[SW1-Eth-Trunk1] port link-type trunk
+[SW1-Eth-Trunk1] port trunk allow-pass vlan 10 20 30</code></pre>
+<h3 id="54-验证">5.4 验证</h3>
+<pre><code>&lt;SW1&gt; display eth-trunk 1
+&lt;SW1&gt; display lacp statistics eth-trunk 1</code></pre>
+<hr>
+<h2 id="6-静态路由与缺省路由">6. 静态路由与缺省路由</h2>
+<h3 id="61-配置静态路由">6.1 配置静态路由</h3>
+<pre><code>[AR1] ip route-static 10.2.2.0 24 192.168.12.2</code></pre>
+<h3 id="62-配置缺省路由">6.2 配置缺省路由</h3>
+<pre><code>[AR1] ip route-static 0.0.0.0 0 192.168.12.2</code></pre>
+<h3 id="63-浮动静态">6.3 浮动静态</h3>
+<pre><code>[AR1] ip route-static 0.0.0.0 0 192.168.12.2 preference 60
+[AR1] ip route-static 0.0.0.0 0 192.168.13.2 preference 100</code></pre>
+<h3 id="64-验证">6.4 验证</h3>
+<pre><code>&lt;AR1&gt; display ip routing-table
+&lt;AR1&gt; display ip routing-table protocol static
+&lt;AR1&gt; tracert 10.2.2.2</code></pre>
+<hr>
+<h2 id="7-ospf">7. OSPF</h2>
+<h3 id="71-启动-ospf-进程">7.1 启动 OSPF 进程</h3>
+<pre><code>[AR1] ospf 1 router-id 1.1.1.1</code></pre>
+<h3 id="72-宣告网段">7.2 宣告网段</h3>
+<pre><code>[AR1-ospf-1] area 0
+[AR1-ospf-1-area-0.0.0.0] network 192.168.12.0 0.0.0.255
+[AR1-ospf-1-area-0.0.0.0] network 1.1.1.1 0.0.0.0</code></pre>
+<h3 id="73-配置认证示例">7.3 配置认证（示例）</h3>
+<pre><code>[AR1] interface GigabitEthernet 0/0/0
+[AR1-GigabitEthernet0/0/0] ospf authentication-mode simple plain huawei</code></pre>
+<h3 id="74-传播缺省路由">7.4 传播缺省路由</h3>
+<pre><code>[AR1-ospf-1] default-route-advertise</code></pre>
+<h3 id="75-路由引入">7.5 路由引入</h3>
+<pre><code>[AR1-ospf-1] import-route static</code></pre>
+<h3 id="76-验证">7.6 验证</h3>
+<pre><code>&lt;AR1&gt; display ospf peer
+&lt;AR1&gt; display ospf interface
+&lt;AR1&gt; display ospf routing
+&lt;AR1&gt; display ip routing-table protocol ospf</code></pre>
+<p>排障重点：</p>
+<ul>
+<li><code>display ospf peer</code></li>
+<li><code>display ip interface brief</code></li>
+<li>区域、认证、Hello/Dead、MTU、网络类型</li>
+</ul>
+<hr>
+<h2 id="8-acl">8. ACL</h2>
+<h3 id="81-基本-acl">8.1 基本 ACL</h3>
+<pre><code>[AR1] acl 2000
+[AR1-acl-basic-2000] rule 5 permit source 192.168.10.0 0.0.0.255
+[AR1-acl-basic-2000] rule 10 deny</code></pre>
+<h3 id="82-高级-acl">8.2 高级 ACL</h3>
+<pre><code>[AR1] acl 3000
+[AR1-acl-adv-3000] rule 5 permit tcp source 192.168.10.0 0.0.0.255 destination 10.1.1.0 0.0.0.255 destination-port eq 80
+[AR1-acl-adv-3000] rule 10 deny ip</code></pre>
+<h3 id="83-接口调用-acl">8.3 接口调用 ACL</h3>
+<pre><code>[AR1] interface GigabitEthernet 0/0/0
+[AR1-GigabitEthernet0/0/0] traffic-filter inbound acl 3000</code></pre>
+<h3 id="84-验证">8.4 验证</h3>
+<pre><code>&lt;AR1&gt; display acl 3000
+&lt;AR1&gt; display current-configuration interface GigabitEthernet 0/0/0</code></pre>
+<hr>
+<h2 id="9-nat">9. NAT</h2>
+<h3 id="91-easy-ip">9.1 Easy-IP</h3>
+<pre><code>[AR1] acl 2001
+[AR1-acl-basic-2001] rule 5 permit source 192.168.10.0 0.0.0.255
+
+[AR1] interface GigabitEthernet 0/0/1
+[AR1-GigabitEthernet0/0/1] nat outbound 2001</code></pre>
+<h3 id="92-napt-地址池部分平台">9.2 NAPT 地址池（部分平台）</h3>
+<pre><code>[AR1] nat address-group 1 100.1.1.10 100.1.1.20
+[AR1] acl 2001
+[AR1-acl-basic-2001] rule 5 permit source 192.168.10.0 0.0.0.255
+[AR1] interface GigabitEthernet 0/0/1
+[AR1-GigabitEthernet0/0/1] nat outbound 2001 address-group 1</code></pre>
+<h3 id="93-验证">9.3 验证</h3>
+<pre><code>&lt;AR1&gt; display nat session all
+&lt;AR1&gt; display nat outbound</code></pre>
+<hr>
+<h2 id="10-dhcp">10. DHCP</h2>
+<h3 id="101-全局开启-dhcp">10.1 全局开启 DHCP</h3>
+<pre><code>[AR1] dhcp enable</code></pre>
+<h3 id="102-接口地址池发放">10.2 接口地址池发放</h3>
+<pre><code>[AR1] interface Vlanif 10
+[AR1-Vlanif10] ip address 192.168.10.254 24
+[AR1-Vlanif10] dhcp select interface</code></pre>
+<h3 id="103-全局地址池">10.3 全局地址池</h3>
+<pre><code>[AR1] ip pool VLAN20
+[AR1-ip-pool-VLAN20] network 192.168.20.0 mask 255.255.255.0
+[AR1-ip-pool-VLAN20] gateway-list 192.168.20.254
+[AR1-ip-pool-VLAN20] dns-list 114.114.114.114</code></pre>
+<h3 id="104-验证">10.4 验证</h3>
+<pre><code>&lt;AR1&gt; display ip pool
+&lt;AR1&gt; display dhcp server ip-in-use</code></pre>
+<hr>
+<h2 id="11-ipv6-基础">11. IPv6 基础</h2>
+<h3 id="111-开启-ipv6">11.1 开启 IPv6</h3>
+<pre><code>[AR1] ipv6</code></pre>
+<h3 id="112-接口配置-ipv6">11.2 接口配置 IPv6</h3>
+<pre><code>[AR1] interface GigabitEthernet 0/0/0
+[AR1-GigabitEthernet0/0/0] ipv6 enable
+[AR1-GigabitEthernet0/0/0] ipv6 address 2001:db8:12::1/64</code></pre>
+<h3 id="113-静态-ipv6-路由">11.3 静态 IPv6 路由</h3>
+<pre><code>[AR1] ipv6 route-static 2001:db8:2::/64 2001:db8:12::2</code></pre>
+<h3 id="114-验证">11.4 验证</h3>
+<pre><code>&lt;AR1&gt; display ipv6 interface brief
+&lt;AR1&gt; display ipv6 routing-table
+&lt;AR1&gt; ping ipv6 2001:db8:12::2</code></pre>
+<hr>
+<h2 id="12-bgp">12. BGP</h2>
+<p>华为官方 <code>display bgp peer</code> 与 <code>display bgp routing-table</code> 是 BGP 验证核心命令。citeturn0search2turn0search0</p>
+<h3 id="121-建立-bgp-进程">12.1 建立 BGP 进程</h3>
+<pre><code>[AR1] bgp 65001
+[AR1-bgp] router-id 1.1.1.1</code></pre>
+<h3 id="122-配置-ebgp-邻居">12.2 配置 EBGP 邻居</h3>
+<pre><code>[AR1-bgp] peer 192.168.12.2 as-number 65002</code></pre>
+<h3 id="123-宣告本地网段">12.3 宣告本地网段</h3>
+<pre><code>[AR1-bgp] network 10.1.1.0 255.255.255.0</code></pre>
+<h3 id="124-配置-ibgp-邻居">12.4 配置 IBGP 邻居</h3>
+<pre><code>[AR1-bgp] peer 2.2.2.2 as-number 65001
+[AR1-bgp] peer 2.2.2.2 connect-interface LoopBack 0</code></pre>
+<h3 id="125-next-hop-self">12.5 Next-Hop-Self</h3>
+<pre><code>[AR1-bgp] peer 2.2.2.2 next-hop-local</code></pre>
+<h3 id="126-local-preferenceroute-policy">12.6 Local Preference（route-policy）</h3>
+<pre><code>[AR1] route-policy LP permit node 10
+[AR1-route-policy] apply local-preference 200
+
+[AR1] bgp 65001
+[AR1-bgp] peer 192.168.12.2 route-policy LP import</code></pre>
+<h3 id="127-as-path-prependroute-policy">12.7 AS-Path Prepend（route-policy）</h3>
+<pre><code>[AR1] route-policy PREPEND permit node 10
+[AR1-route-policy] apply as-path 65001 65001 65001 additive
+
+[AR1] bgp 65001
+[AR1-bgp] peer 192.168.13.2 route-policy PREPEND export</code></pre>
+<h3 id="128-验证">12.8 验证</h3>
+<pre><code>&lt;AR1&gt; display bgp peer
+&lt;AR1&gt; display bgp routing-table
+&lt;AR1&gt; display bgp routing-table 10.1.1.0
+&lt;AR1&gt; display ip routing-table protocol bgp</code></pre>
+<p>排障重点：</p>
+<ul>
+<li>邻居是否 Established</li>
+<li>router-id 是否冲突</li>
+<li>AS 是否正确</li>
+<li>Loopback 建邻是否有可达路由</li>
+<li>next-hop 是否可达</li>
+<li>route-policy 是否误过滤</li>
+</ul>
+<hr>
+<h2 id="13-mpls-ldp">13. MPLS / LDP</h2>
+<h3 id="131-开启-mpls">13.1 开启 MPLS</h3>
+<pre><code>[P] mpls lsr-id 1.1.1.1
+[P] mpls</code></pre>
+<h3 id="132-接口开启-mpls-ldp">13.2 接口开启 MPLS / LDP</h3>
+<pre><code>[P] interface GigabitEthernet 0/0/0
+[P-GigabitEthernet0/0/0] mpls
+[P-GigabitEthernet0/0/0] mpls ldp</code></pre>
+<h3 id="133-启动-ldp">13.3 启动 LDP</h3>
+<pre><code>[P] mpls ldp</code></pre>
+<h3 id="134-验证">13.4 验证</h3>
+<pre><code>&lt;P&gt; display mpls ldp session
+&lt;P&gt; display mpls lsp
+&lt;P&gt; display mpls forwarding-table</code></pre>
+<hr>
+<h2 id="14-mpls-l3vpn">14. MPLS L3VPN</h2>
+<h3 id="141-创建-vpn-实例">14.1 创建 VPN 实例</h3>
+<pre><code>[PE1] ip vpn-instance VPN-A
+[PE1-vpn-instance-VPN-A] ipv4-family
+[PE1-vpn-instance-VPN-A-af-ipv4] route-distinguisher 100:1
+[PE1-vpn-instance-VPN-A-af-ipv4] vpn-target 100:1 both</code></pre>
+<h3 id="142-接口绑定-vrf">14.2 接口绑定 VRF</h3>
+<pre><code>[PE1] interface GigabitEthernet 0/0/2
+[PE1-GigabitEthernet0/0/2] ip binding vpn-instance VPN-A
+[PE1-GigabitEthernet0/0/2] ip address 10.10.10.1 24</code></pre>
+<h3 id="143-建立-mp-bgp-vpnv4-邻居">14.3 建立 MP-BGP VPNv4 邻居</h3>
+<pre><code>[PE1] bgp 65000
+[PE1-bgp] peer 2.2.2.2 as-number 65000
+[PE1-bgp] peer 2.2.2.2 connect-interface LoopBack 0
+[PE1-bgp] ipv4-family vpnv4
+[PE1-bgp-af-vpnv4] peer 2.2.2.2 enable</code></pre>
+<h3 id="144-ce-路由引入-vrf示例">14.4 CE 路由引入 VRF（示例）</h3>
+<pre><code>[PE1] bgp 65000
+[PE1-bgp] ipv4-family vpn-instance VPN-A
+[PE1-bgp-VPN-A] import-route direct</code></pre>
+<h3 id="145-验证">14.5 验证</h3>
+<pre><code>&lt;PE1&gt; display ip vpn-instance
+&lt;PE1&gt; display bgp vpnv4 all peer
+&lt;PE1&gt; display bgp vpnv4 all routing-table
+&lt;PE1&gt; display ip routing-table vpn-instance VPN-A
+&lt;PE1&gt; display mpls forwarding-table</code></pre>
+<p>排障顺序：</p>
+<ol>
+<li>IGP</li>
+<li>LDP</li>
+<li>MP-BGP VPNv4</li>
+<li>VRF/RD/RT</li>
+<li>VPN 路由是否进表</li>
+<li>标签转发是否存在</li>
+</ol>
+<hr>
+<h2 id="15-常用-display-命令总表">15. 常用 display 命令总表</h2>
+<table><thead><tr><th>场景</th><th>核心命令</th></tr></thead><tbody><tr><td>接口状态</td><td><code>display ip interface brief</code></td></tr><tr><td>二层接口与 VLAN</td><td><code>display vlan</code> <code>display port vlan</code></td></tr><tr><td>MAC 学习</td><td><code>display mac-address</code></td></tr><tr><td>STP</td><td><code>display stp brief</code></td></tr><tr><td>聚合</td><td><code>display eth-trunk</code></td></tr><tr><td>路由表</td><td><code>display ip routing-table</code></td></tr><tr><td>OSPF 邻居</td><td><code>display ospf peer</code></td></tr><tr><td>OSPF 路由</td><td><code>display ospf routing</code></td></tr><tr><td>ACL</td><td><code>display acl all</code></td></tr><tr><td>NAT</td><td><code>display nat session all</code></td></tr><tr><td>DHCP</td><td><code>display ip pool</code></td></tr><tr><td>BGP 邻居</td><td><code>display bgp peer</code></td></tr><tr><td>BGP 路由</td><td><code>display bgp routing-table</code></td></tr><tr><td>MPLS LDP</td><td><code>display mpls ldp session</code></td></tr><tr><td>MPLS 转发表</td><td><code>display mpls forwarding-table</code></td></tr><tr><td>VPN 路由</td><td><code>display ip routing-table vpn-instance &lt;name&gt;</code></td></tr></tbody></table>
+<hr>
+<h2 id="16-最重要的排障习惯">16. 最重要的排障习惯</h2>
+<h3 id="161-每次实验都按这个顺序查">16.1 每次实验都按这个顺序查</h3>
+<ol>
+<li><code>display interface brief</code></li>
+<li><code>display ip interface brief</code></li>
+<li><code>display current-configuration interface ...</code></li>
+<li><code>display ip routing-table</code></li>
+<li>对应协议 <code>display</code> 命令</li>
+</ol>
+<h3 id="162-每次改配置前做三件事">16.2 每次改配置前做三件事</h3>
+<pre><code>display current-configuration
+display ip routing-table
+save</code></pre>
+<h3 id="163-每次实验后做四件事">16.3 每次实验后做四件事</h3>
+<ul>
+<li>保存配置</li>
+<li>导出拓扑图</li>
+<li>记录故障点</li>
+<li>写 5 行复盘</li>
+</ul>
+<hr>
+<h2 id="17-高阶模块提醒">17. 高阶模块提醒</h2>
+<p>下列模块在不同实验环境中差异更大，建议以你后续确定的具体平台为准：</p>
+<ul>
+<li>VXLAN / BGP EVPN</li>
+<li>CloudCampus / NAC / iMaster NCE</li>
+<li>SD-WAN / CloudWAN</li>
+<li>Segment Routing / SRv6</li>
+<li>NETCONF / RESTCONF / Telemetry</li>
+</ul>
+<p>建议做法：</p>
+<ol>
+<li>先学原理与控制面逻辑</li>
+<li>再确定实验平台</li>
+<li>再按平台版本找对应命令</li>
+</ol>
+<hr>
+<h2 id="18-官方参考链接">18. 官方参考链接</h2>
+<p>以下内容用于校准通用命令和验证命令：</p>
+<ul>
+<li>华为 VLAN 配置命令文档：https://support.huawei.com/enterprise/en/doc/EDOC1100514211/834147df/vlan-configuration-commands</li>
+<li>华为 VLAN 基础说明：https://support.huawei.com/enterprise/en/doc/EDOC1100086556</li>
+<li>华为 <code>display bgp peer</code> 文档：https://info.support.huawei.com/hedex/api/pages/EDOC1100149308/AEJ0713J/18/resources/cli_vrp/display_bgp_peer.html</li>
+<li>华为 <code>display bgp routing-table</code> 文档：https://support.huawei.com/enterprise/en/doc/EDOC1100333812/bdd63b27/display-bgp-routing-table</li>
+</ul>
+<p>说明：</p>
+<ul>
+<li>本手册中的命令示例为学习参考</li>
+<li>实际考试或项目环境，请以对应 VRP 版本与设备官方命令参考为准</li>
+</ul>
+          <nav class="pager"><a href="华为HCIE_Datacom_学习手册.html"><span class="pager-label">上一页</span>华为 HCIE-Datacom 学习手册</a><a href="华为HCIE_Datacom_故障排查手册.html"><span class="pager-label">下一页</span>华为 HCIE-Datacom 故障排查手册</a></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

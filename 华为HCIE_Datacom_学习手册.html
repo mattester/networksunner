@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>华为 HCIE-Datacom 学习手册</title>
+  <style>
+:root{
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#667085;
+  --line:#e5e7eb;
+  --brand:#0f766e;
+  --brand-soft:#ecfeff;
+  --code:#0b1220;
+  --shadow:0 10px 30px rgba(15,23,42,.08);
+  --radius:18px;
+  --max:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15,118,110,.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(14,165,233,.08), transparent 24%),
+    var(--bg);
+  font:16px/1.75 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.page{max-width:var(--max);margin:0 auto;padding:32px 20px 64px}
+.layout{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  gap:24px;
+  align-items:start;
+}
+.sidebar{
+  position:sticky;
+  top:20px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:20px 18px;
+}
+.sidebar-title{
+  margin:0 0 8px;
+  font-size:16px;
+}
+.sidebar-note{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.search{
+  margin:0 0 14px;
+}
+.search-tools{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+.search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:14px;
+  padding:11px 14px;
+  outline:none;
+  font:14px/1.4 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.search input:focus{
+  border-color:#99f6e4;
+  box-shadow:0 0 0 4px rgba(45,212,191,.12);
+}
+.tool-btn{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:12px;
+  padding:8px 10px;
+  cursor:pointer;
+  font:13px/1.2 "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+}
+.tool-btn:hover{
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+.sidebar.collapsed .toc,
+.sidebar.collapsed .sidebar-note,
+.sidebar.collapsed .search,
+.sidebar.collapsed .toc-count{
+  display:none;
+}
+.sidebar.collapsed{
+  padding-bottom:14px;
+}
+.toc{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.toc a{
+  color:var(--text);
+  text-decoration:none;
+  padding:8px 10px;
+  border-radius:12px;
+  transition:.18s ease;
+  font-size:14px;
+}
+.toc a:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+}
+.toc a.active{
+  background:#dcfce7;
+  color:#166534;
+  font-weight:700;
+}
+.toc .lv2{padding-left:10px}
+.toc .lv3{padding-left:22px;color:var(--muted)}
+.toc .lv4{padding-left:34px;color:var(--muted)}
+.main{min-width:0}
+.hero{
+  background:linear-gradient(135deg,#ffffff,#f8fffe);
+  border:1px solid rgba(15,118,110,.12);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:36px 32px;
+  margin-bottom:24px;
+}
+.eyebrow{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{margin:10px 0 8px;font-size:38px;line-height:1.2}
+.subtitle{margin:0;color:var(--muted);max-width:760px}
+.content{
+  background:rgba(255,255,255,.76);
+  backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.8);
+  border-radius:28px;
+  box-shadow:var(--shadow);
+  padding:28px;
+}
+h2,h3,h4{scroll-margin-top:24px}
+h2{
+  margin:34px 0 14px;
+  padding-top:6px;
+  font-size:28px;
+  border-top:1px solid var(--line);
+}
+h3{margin:26px 0 12px;font-size:22px}
+h4{margin:18px 0 10px;font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+hr{border:none;border-top:1px solid var(--line);margin:28px 0}
+code{
+  font-family:"Cascadia Code","Consolas",monospace;
+  background:#eef2ff;
+  color:#312e81;
+  border-radius:8px;
+  padding:2px 6px;
+}
+pre{
+  margin:0;
+  overflow:auto;
+  padding:18px;
+  border-radius:16px;
+  background:var(--code);
+  color:#dbeafe;
+  box-shadow:inset 0 0 0 1px rgba(148,163,184,.15);
+}
+pre code{background:transparent;color:inherit;padding:0}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin:16px 0;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--card);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+th,td{
+  border:1px solid var(--line);
+  padding:12px 14px;
+  text-align:left;
+  vertical-align:top;
+}
+th{background:#f8fafc;font-weight:700}
+.note{
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border:1px solid rgba(15,118,110,.15);
+  border-left:4px solid var(--brand);
+  border-radius:16px;
+  padding:14px 16px;
+  margin:16px 0;
+}
+.entry-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  margin:18px 0 8px;
+}
+.entry-card{
+  display:block;
+  padding:18px;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff,#f0fdf9);
+  border:1px solid rgba(15,118,110,.16);
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  color:var(--text);
+}
+.entry-card:hover{
+  border-color:#99f6e4;
+  background:linear-gradient(135deg,#ffffff,#ecfeff);
+}
+.entry-card strong{
+  display:block;
+  margin-bottom:6px;
+  font-size:17px;
+}
+.entry-card span{
+  color:var(--muted);
+  font-size:14px;
+}
+.quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:14px 0 0;
+}
+.quick-links a{
+  display:inline-block;
+  padding:9px 12px;
+  border-radius:999px;
+  border:1px solid rgba(15,118,110,.18);
+  background:#fff;
+  color:var(--brand);
+  text-decoration:none;
+  font-size:14px;
+}
+.quick-links a:hover{
+  background:#ecfeff;
+  border-color:#99f6e4;
+}
+.diagram{
+  margin:18px 0;
+  border:1px solid rgba(15,118,110,.12);
+  background:linear-gradient(180deg,#f8fffe,#ffffff);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.diagram-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+}
+.diagram-body{padding:16px}
+.diagram-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:16px;
+  align-items:start;
+}
+.diagram-svg{
+  width:100%;
+  min-height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:16px;
+  background:#fcfffe;
+}
+.diagram-text pre{background:#0f172a}
+.footer{
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  margin-top:20px;
+}
+.pager{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+.pager a,.pager span{
+  flex:1;
+  display:block;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  text-decoration:none;
+  box-shadow:var(--shadow);
+}
+.pager a:hover{
+  border-color:#a7f3d0;
+  background:#f0fdf4;
+}
+.pager-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+.book-section{
+  margin-top:36px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.result-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:var(--shadow);
+  margin:14px 0;
+}
+.result-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+}
+.result-card p{
+  margin:0;
+  color:var(--muted);
+}
+.result-link{
+  color:var(--brand);
+  text-decoration:none;
+}
+.global-search-list[hidden]{
+  display:none;
+}
+.search-meta{
+  display:none;
+  margin:0 0 16px;
+  color:var(--muted);
+  font-size:14px;
+}
+.toc-count{
+  margin:0 0 10px;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-mark{
+  background:#fef08a;
+  color:inherit;
+  padding:0 .12em;
+  border-radius:4px;
+}
+@media (max-width: 860px){
+  .page{padding:18px 14px 36px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .hero,.content{padding:20px}
+  h1{font-size:30px}
+  h2{font-size:24px}
+  .diagram-grid{grid-template-columns:1fr}
+  .pager{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .page{max-width:none;padding:0}
+  .layout{display:block}
+  .sidebar,.footer,.pager{display:none}
+  .hero,.content{
+    box-shadow:none;
+    border:0;
+    background:#fff;
+    padding:0;
+  }
+  h1,h2,h3,h4{break-after:avoid}
+  pre,table,.diagram,.note{break-inside:avoid}
+}
+</style>
+</head>
+<body id="top">
+  <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">目录导航</h2>
+        <p class="sidebar-note">适合连续阅读，也方便快速跳到章节。</p>
+        <p class="toc-count" id="search-count"></p>
+        <div class="search">
+          <input id="doc-search" type="search" placeholder="搜索关键词">
+          <div class="search-tools">
+            <button type="button" class="tool-btn" id="next-match">下一个匹配</button>
+            <button type="button" class="tool-btn" id="toggle-toc">折叠目录</button>
+          </div>
+        </div>
+        <div class="toc"><a href="#top" class="lv1">返回顶部</a><a href="#华为-hcie-datacom-学习手册" class="lv1" data-title="华为 HCIE-Datacom 学习手册">华为 HCIE-Datacom 学习手册</a><a href="#1-先说明白你要考的是什么" class="lv2" data-title="1. 先说明白：你要考的是什么">1. 先说明白：你要考的是什么</a><a href="#11-华为认证路径" class="lv3" data-title="1.1 华为认证路径">1.1 华为认证路径</a><a href="#12-hcie-datacom-核心方向" class="lv3" data-title="1.2 HCIE-Datacom 核心方向">1.2 HCIE-Datacom 核心方向</a><a href="#2-零基础如何起步先建立正确的网络脑图" class="lv2" data-title="2. 零基础如何起步：先建立正确的“网络脑图”">2. 零基础如何起步：先建立正确的“网络脑图”</a><a href="#21-正确顺序" class="lv3" data-title="2.1 正确顺序">2.1 正确顺序</a><a href="#22-你必须先形成三个核心问题" class="lv3" data-title="2.2 你必须先形成三个核心问题">2.2 你必须先形成三个核心问题</a><a href="#3-学习阶段总路线" class="lv2" data-title="3. 学习阶段总路线">3. 学习阶段总路线</a><a href="#4-实验环境怎么搭" class="lv2" data-title="4. 实验环境怎么搭">4. 实验环境怎么搭</a><a href="#41-最低配环境" class="lv3" data-title="4.1 最低配环境">4.1 最低配环境</a><a href="#42-推荐目录结构" class="lv3" data-title="4.2 推荐目录结构">4.2 推荐目录结构</a><a href="#43-图示思维" class="lv3" data-title="4.3 图示思维">4.3 图示思维</a><a href="#5-从零开始的基础知识图谱" class="lv2" data-title="5. 从零开始的基础知识图谱">5. 从零开始的基础知识图谱</a><a href="#51-数据通信与网络基础" class="lv3" data-title="5.1 数据通信与网络基础">5.1 数据通信与网络基础</a><a href="#实操案例-1抓包理解-arp-和-icmp" class="lv4" data-title="实操案例 1：抓包理解 ARP 和 ICMP">实操案例 1：抓包理解 ARP 和 ICMP</a><a href="#52-ipv4-与子网划分" class="lv3" data-title="5.2 IPv4 与子网划分">5.2 IPv4 与子网划分</a><a href="#实操案例-2部门网段规划" class="lv4" data-title="实操案例 2：部门网段规划">实操案例 2：部门网段规划</a><a href="#6-二层交换你要学到为什么会环路" class="lv2" data-title="6. 二层交换：你要学到“为什么会环路”">6. 二层交换：你要学到“为什么会环路”</a><a href="#61-必学主题" class="lv3" data-title="6.1 必学主题">6.1 必学主题</a><a href="#图示vlan-隔离" class="lv4" data-title="图示：VLAN 隔离">图示：VLAN 隔离</a><a href="#实操案例-3vlan-trunk-三层网关" class="lv4" data-title="实操案例 3：VLAN + Trunk + 三层网关">实操案例 3：VLAN + Trunk + 三层网关</a><a href="#实操案例-4stp-环路与收敛" class="lv4" data-title="实操案例 4：STP 环路与收敛">实操案例 4：STP 环路与收敛</a><a href="#7-三层路由从能通走向稳定地通" class="lv2" data-title="7. 三层路由：从“能通”走向“稳定地通”">7. 三层路由：从“能通”走向“稳定地通”</a><a href="#71-必学主题" class="lv3" data-title="7.1 必学主题">7.1 必学主题</a><a href="#实操案例-5静态路由-备份链路" class="lv4" data-title="实操案例 5：静态路由 + 备份链路">实操案例 5：静态路由 + 备份链路</a><a href="#实操案例-6ospf-单区域到多区域" class="lv4" data-title="实操案例 6：OSPF 单区域到多区域">实操案例 6：OSPF 单区域到多区域</a><a href="#8-bgp网络工程师的真正分水岭" class="lv2" data-title="8. BGP：网络工程师的真正分水岭">8. BGP：网络工程师的真正分水岭</a><a href="#81-先理解四件事" class="lv3" data-title="8.1 先理解四件事">8.1 先理解四件事</a><a href="#82-必学主题" class="lv3" data-title="8.2 必学主题">8.2 必学主题</a><a href="#实操案例-7双出口企业-bgp-选路" class="lv4" data-title="实操案例 7：双出口企业 BGP 选路">实操案例 7：双出口企业 BGP 选路</a><a href="#9-mpls-vpn-srhcie-的硬门槛" class="lv2" data-title="9. MPLS / VPN / SR：HCIE 的硬门槛">9. MPLS / VPN / SR：HCIE 的硬门槛</a><a href="#91-为什么难" class="lv3" data-title="9.1 为什么难">9.1 为什么难</a><a href="#92-必学主题" class="lv3" data-title="9.2 必学主题">9.2 必学主题</a><a href="#图示mpls-l3vpn-基本模型" class="lv4" data-title="图示：MPLS L3VPN 基本模型">图示：MPLS L3VPN 基本模型</a><a href="#实操案例-8mpls-l3vpn-基础" class="lv4" data-title="实操案例 8：MPLS L3VPN 基础">实操案例 8：MPLS L3VPN 基础</a><a href="#实操案例-9sr-srv6-入门" class="lv4" data-title="实操案例 9：SR / SRv6 入门">实操案例 9：SR / SRv6 入门</a><a href="#10-园区网络从交换机配置到企业架构设计" class="lv2" data-title="10. 园区网络：从交换机配置到企业架构设计">10. 园区网络：从交换机配置到企业架构设计</a><a href="#101-必学主题" class="lv3" data-title="10.1 必学主题">10.1 必学主题</a><a href="#图示典型大中型园区" class="lv4" data-title="图示：典型大中型园区">图示：典型大中型园区</a><a href="#102-你要学的不只是配置而是设计" class="lv3" data-title="10.2 你要学的不只是配置，而是设计">10.2 你要学的不只是配置，而是设计</a><a href="#实操案例-10三层园区升级成-vxlanevpn-园区" class="lv4" data-title="实操案例 10：三层园区升级成 VXLAN/EVPN 园区">实操案例 10：三层园区升级成 VXLAN/EVPN 园区</a><a href="#11-广域互联与承载从点到点到企业云网" class="lv2" data-title="11. 广域互联与承载：从点到点到企业云网">11. 广域互联与承载：从点到点到企业云网</a><a href="#111-必学主题" class="lv3" data-title="11.1 必学主题">11.1 必学主题</a><a href="#实操案例-11分支互联与-sd-wan" class="lv4" data-title="实操案例 11：分支互联与 SD-WAN">实操案例 11：分支互联与 SD-WAN</a><a href="#12-网络自动化高级网络专家必须有的第二大脑" class="lv2" data-title="12. 网络自动化：高级网络专家必须有的第二大脑">12. 网络自动化：高级网络专家必须有的第二大脑</a><a href="#121-必学主题" class="lv3" data-title="12.1 必学主题">12.1 必学主题</a><a href="#122-从简单到复杂的正确顺序" class="lv3" data-title="12.2 从简单到复杂的正确顺序">12.2 从简单到复杂的正确顺序</a><a href="#实操案例-12批量备份设备配置" class="lv4" data-title="实操案例 12：批量备份设备配置">实操案例 12：批量备份设备配置</a><a href="#实操案例-13批量检查-ospf-邻居" class="lv4" data-title="实操案例 13：批量检查 OSPF 邻居">实操案例 13：批量检查 OSPF 邻居</a><a href="#13-故障排查高手不是会命令而是会缩小范围" class="lv2" data-title="13. 故障排查：高手不是会命令，而是会缩小范围">13. 故障排查：高手不是会命令，而是会缩小范围</a><a href="#131-五层排障法" class="lv3" data-title="13.1 五层排障法">13.1 五层排障法</a><a href="#132-黄金思路" class="lv3" data-title="13.2 黄金思路">13.2 黄金思路</a><a href="#133-三个常见故障案例" class="lv3" data-title="13.3 三个常见故障案例">13.3 三个常见故障案例</a><a href="#案例-a同-vlan-不通" class="lv4" data-title="案例 A：同 VLAN 不通">案例 A：同 VLAN 不通</a><a href="#案例-bospf-邻居不起" class="lv4" data-title="案例 B：OSPF 邻居不起">案例 B：OSPF 邻居不起</a><a href="#案例-cmpls-vpn-不通" class="lv4" data-title="案例 C：MPLS VPN 不通">案例 C：MPLS VPN 不通</a><a href="#14-工程设计方法像高级专家一样思考" class="lv2" data-title="14. 工程设计方法：像高级专家一样思考">14. 工程设计方法：像高级专家一样思考</a><a href="#141-设计不是把功能堆上去" class="lv3" data-title="14.1 设计不是“把功能堆上去”">14.1 设计不是“把功能堆上去”</a><a href="#142-高级工程师的-8-个视角" class="lv3" data-title="14.2 高级工程师的 8 个视角">14.2 高级工程师的 8 个视角</a><a href="#143-一个教授式思维模型" class="lv3" data-title="14.3 一个“教授式”思维模型">14.3 一个“教授式”思维模型</a><a href="#15-学习技巧真正能拉开差距的独特方法" class="lv2" data-title="15. 学习技巧：真正能拉开差距的独特方法">15. 学习技巧：真正能拉开差距的独特方法</a><a href="#技巧-1每学一个协议必须做三件套" class="lv3" data-title="技巧 1：每学一个协议，必须做“三件套”">技巧 1：每学一个协议，必须做“三件套”</a><a href="#技巧-2每做一个实验必须输出四样东西" class="lv3" data-title="技巧 2：每做一个实验，必须输出四样东西">技巧 2：每做一个实验，必须输出四样东西</a><a href="#技巧-3反向学习" class="lv3" data-title="技巧 3：反向学习">技巧 3：反向学习</a><a href="#技巧-4建立故障词典" class="lv3" data-title="技巧 4：建立“故障词典”">技巧 4：建立“故障词典”</a><a href="#技巧-5把命令背成问题树" class="lv3" data-title="技巧 5：把命令背成“问题树”">技巧 5：把命令背成“问题树”</a><a href="#16-一份可以跟着执行的-24-周学习计划" class="lv2" data-title="16. 一份可以跟着执行的 24 周学习计划">16. 一份可以跟着执行的 24 周学习计划</a><a href="#第-1-4-周打基础" class="lv3" data-title="第 1-4 周：打基础">第 1-4 周：打基础</a><a href="#第-5-8-周强化交换与路由" class="lv3" data-title="第 5-8 周：强化交换与路由">第 5-8 周：强化交换与路由</a><a href="#第-9-12-周bgp-mpls-入门" class="lv3" data-title="第 9-12 周：BGP + MPLS 入门">第 9-12 周：BGP + MPLS 入门</a><a href="#第-13-16-周园区与广域" class="lv3" data-title="第 13-16 周：园区与广域">第 13-16 周：园区与广域</a><a href="#第-17-20-周自动化-高阶承载" class="lv3" data-title="第 17-20 周：自动化 + 高阶承载">第 17-20 周：自动化 + 高阶承载</a><a href="#第-21-24-周hcie-冲刺" class="lv3" data-title="第 21-24 周：HCIE 冲刺">第 21-24 周：HCIE 冲刺</a><a href="#17-每天怎么学最有效" class="lv2" data-title="17. 每天怎么学最有效">17. 每天怎么学最有效</a><a href="#18-你最终要达到的高级网络专家能力模型" class="lv2" data-title="18. 你最终要达到的“高级网络专家”能力模型">18. 你最终要达到的“高级网络专家”能力模型</a><a href="#终极标准" class="lv3" data-title="终极标准">终极标准</a><a href="#19-最后的建议" class="lv2" data-title="19. 最后的建议">19. 最后的建议</a><a href="#20-官方参考信息" class="lv2" data-title="20. 官方参考信息">20. 官方参考信息</a></div>
+      </aside>
+      <div class="main">
+        <header class="hero">
+          <div class="eyebrow">Markdown To HTML</div>
+          <h1>华为 HCIE-Datacom 学习手册</h1>
+          <p class="subtitle">适用对象：零基础或基础薄弱，希望系统学习网络知识，并朝华为 HCIE-Datacom 方向进阶的学习者</p>
+          <nav class="quick-links"><a href="index.html">返回目录</a><a href="总手册.html">打开总手册</a><a href="全站搜索.html">打开全站搜索</a></nav>
+        </header>
+        <main class="content">
+          <p class="search-meta" id="search-meta"></p>
+          <h1 id="华为-hcie-datacom-学习手册">华为 HCIE-Datacom 学习手册</h1>
+<p>适用对象：零基础或基础薄弱，希望系统学习网络知识，并朝华为 HCIE-Datacom 方向进阶的学习者 目标：建立从网络基础、工程实践、故障排查到 Datacom 高阶方案设计与实验能力的完整体系 版本说明：本手册的认证路径与知识点分布参考华为官方公开考试信息与大纲；训练方法、案例拆解、学习节奏与技巧为经验性建议。</p>
+<hr>
+<h2 id="1-先说明白你要考的是什么">1. 先说明白：你要考的是什么</h2>
+<h3 id="11-华为认证路径">1.1 华为认证路径</h3>
+<p>华为职业认证分为三层：</p>
+<ul>
+<li>HCIA：入门</li>
+<li>HCIP：进阶</li>
+<li>HCIE：专家</li>
+</ul>
+<p>如果你想成为高级网络专家，建议按下面路径走：</p>
+<ol>
+<li>先掌握 HCIA-Datacom 的基础体系</li>
+<li>再补齐 HCIP 级的路由交换、园区、广域、自动化</li>
+<li>最后冲 HCIE-Datacom 的笔试和实验</li>
+</ol>
+<h3 id="12-hcie-datacom-核心方向">1.2 HCIE-Datacom 核心方向</h3>
+<p>根据华为官方 HCIE-Datacom V1.0 考试大纲，笔试/实验覆盖五大块：</p>
+<table><thead><tr><th>模块</th><th>笔试占比</th><th>实验占比</th><th>你应该怎么理解</th></tr></thead><tbody><tr><td>高级路由交换技术</td><td>37%</td><td>40%</td><td>核心中的核心，必须最强</td></tr><tr><td>园区网络规划与部署</td><td>23%</td><td>20%</td><td>企业园区、CloudCampus、NAC、业务随行、VXLAN/EVPN</td></tr><tr><td>广域互联网络规划与部署</td><td>8%</td><td>5%</td><td>SD-WAN、WAN 互联与可靠性</td></tr><tr><td>广域承载网络规划与部署</td><td>15%</td><td>25%</td><td>MPLS、SR、SRv6、CloudWAN、SLA</td></tr><tr><td>网络自动化</td><td>17%</td><td>10%</td><td>Python、SSH、NETCONF/YANG、RESTCONF、Telemetry</td></tr></tbody></table>
+<p>结论：</p>
+<ul>
+<li>真正拉开差距的是：高级路由交换 + 园区虚拟化 + MPLS/SR + 自动化</li>
+<li>通过 HCIE 不只是会敲命令，而是会设计、部署、验证、排障、割接</li>
+</ul>
+<hr>
+<h2 id="2-零基础如何起步先建立正确的网络脑图">2. 零基础如何起步：先建立正确的“网络脑图”</h2>
+<p>很多人学不进去，不是因为难，而是顺序错了。</p>
+<h3 id="21-正确顺序">2.1 正确顺序</h3>
+<p>不要上来就学 BGP、MPLS、EVPN。 先按下面顺序建立网络脑图：</p>
+<ol>
+<li>网络是什么：设备、接口、链路、报文、协议</li>
+<li>主机如何通信：ARP、IP、路由、TCP/UDP</li>
+<li>二层怎么通：交换、VLAN、STP、链路聚合</li>
+<li>三层怎么通：静态路由、OSPF、BGP</li>
+<li>怎么保证稳定：冗余、收敛、故障切换</li>
+<li>怎么保证安全：ACL、AAA、NAT、基础安全</li>
+<li>怎么规模化：MPLS、VPN、EVPN、VXLAN、SR</li>
+<li>怎么管理：日志、NTP、SNMP、Telemetry、API</li>
+<li>怎么落地：设计、割接、验证、排障、自动化</li>
+</ol>
+<h3 id="22-你必须先形成三个核心问题">2.2 你必须先形成三个核心问题</h3>
+<p>学每个知识点时，都问自己：</p>
+<ol>
+<li>它解决什么问题？</li>
+<li>它为什么比旧方案更好？</li>
+<li>它出故障时，我从哪里开始排查？</li>
+</ol>
+<p>这是从“会配置”走向“会工程”的分水岭。</p>
+<hr>
+<h2 id="3-学习阶段总路线">3. 学习阶段总路线</h2>
+<table><thead><tr><th>阶段</th><th>周期建议</th><th>目标</th><th>输出成果</th></tr></thead><tbody><tr><td>阶段 0</td><td>1 周</td><td>环境准备、方法建立</td><td>实验环境、笔记模板、命令手册</td></tr><tr><td>阶段 1</td><td>4-6 周</td><td>打牢 HCIA 基础</td><td>能独立讲清二三层原理并完成基础实验</td></tr><tr><td>阶段 2</td><td>6-8 周</td><td>强化路由交换</td><td>能设计并排障中小型路由交换网络</td></tr><tr><td>阶段 3</td><td>6-8 周</td><td>进入 HCIP/HCIE 路线</td><td>OSPF/BGP/MPLS/IPv6/QoS 体系化</td></tr><tr><td>阶段 4</td><td>6-10 周</td><td>园区与广域方案</td><td>CloudCampus、SD-WAN、CloudWAN、VXLAN/EVPN</td></tr><tr><td>阶段 5</td><td>4-6 周</td><td>自动化</td><td>Python + SSH + NETCONF + RESTCONF</td></tr><tr><td>阶段 6</td><td>6-10 周</td><td>HCIE 实验化训练</td><td>场景编排、排障、割接、限时实验</td></tr><tr><td>阶段 7</td><td>持续</td><td>专家化</td><td>设计文档、复盘、项目思维、性能优化</td></tr></tbody></table>
+<hr>
+<h2 id="4-实验环境怎么搭">4. 实验环境怎么搭</h2>
+<h3 id="41-最低配环境">4.1 最低配环境</h3>
+<ul>
+<li>Windows PC 一台</li>
+<li>eNSP 或可替代实验环境</li>
+<li>VirtualBox / VMware</li>
+<li>Wireshark</li>
+<li>VS Code</li>
+<li>Python 3</li>
+<li>XMind 或 Draw.io</li>
+</ul>
+<h3 id="42-推荐目录结构">4.2 推荐目录结构</h3>
+<pre><code>HCIE-Study/
+├─ 01-Basic/
+├─ 02-Switching/
+├─ 03-Routing/
+├─ 04-BGP/
+├─ 05-MPLS/
+├─ 06-EVPN-VXLAN/
+├─ 07-Campus/
+├─ 08-WAN-SDWAN/
+├─ 09-Automation/
+├─ 10-Troubleshooting/
+├─ diagrams/
+├─ configs/
+└─ notes/</code></pre>
+<h3 id="43-图示思维">4.3 图示思维</h3>
+<p>你每做一个实验，必须画图。</p>
+<p>示意图例：</p>
+<section class="diagram"><div class="diagram-head"><strong>拓扑示意</strong><span>自动从文档中的结构文本生成</span></div><div class="diagram-body"><div class="diagram-grid"><div><svg viewBox="0 0 780 230" class="diagram-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="network topology diagram"><defs><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#94a3b8" flood-opacity=".18"/></filter></defs><rect x="0" y="0" width="100%" height="100%" fill="#fcfffe"/><line x1="90" y1="70" x2="240" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="240" y1="70" x2="390" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="390" y1="70" x2="540" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="690" y1="70" x2="90" y2="160" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="90" y1="160" x2="240" y2="160" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><rect x="42" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="90" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">PC1</text><rect x="192" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="240" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">SW1</text><rect x="342" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="390" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">SW2</text><rect x="492" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="540" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">PC2</text><rect x="642" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="690" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR1</text><rect x="42" y="138" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="90" y="165" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR2</text><rect x="192" y="138" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="240" y="165" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">AR3</text></svg></div><div class="diagram-text"><pre><code>PC1 --- SW1 === SW2 --- PC2
+         |       |
+        AR1 ---- AR2 ---- AR3</code></pre></div></div></div></section>
+<p>符号约定：</p>
+<ul>
+<li><code>---</code> 二层链路</li>
+<li><code>===</code> 聚合链路或 Trunk</li>
+<li><code>----</code> 三层互联</li>
+<li>用颜色区分 VLAN、OSPF Area、BGP AS、VPN</li>
+</ul>
+<hr>
+<h2 id="5-从零开始的基础知识图谱">5. 从零开始的基础知识图谱</h2>
+<h3 id="51-数据通信与网络基础">5.1 数据通信与网络基础</h3>
+<p>必须掌握：</p>
+<ul>
+<li>OSI 七层、TCP/IP 四层</li>
+<li>封装与解封装</li>
+<li>MAC、IP、端口</li>
+<li>广播域、冲突域</li>
+<li>ARP 工作过程</li>
+<li>TCP 三次握手/四次挥手</li>
+<li>UDP 与 TCP 对比</li>
+<li>路由器和交换机的工作差异</li>
+</ul>
+<h4 id="实操案例-1抓包理解-arp-和-icmp">实操案例 1：抓包理解 ARP 和 ICMP</h4>
+<p>目标：</p>
+<ul>
+<li>看见“主机第一次 ping 网关时到底发了什么”</li>
+</ul>
+<p>步骤：</p>
+<ol>
+<li>两台 PC + 一个二层交换机</li>
+<li>配同网段地址</li>
+<li>清空 ARP 表</li>
+<li>开 Wireshark 抓包</li>
+<li>执行 ping</li>
+</ol>
+<p>你应该观察到：</p>
+<ul>
+<li>先发 ARP Request 广播</li>
+<li>对端返回 ARP Reply</li>
+<li>随后才有 ICMP Echo</li>
+</ul>
+<p>思路技巧：</p>
+<ul>
+<li>学协议时，不要只背定义，必须抓包</li>
+<li>抓包是把抽象协议变成直观现实的最短路径</li>
+</ul>
+<h3 id="52-ipv4-与子网划分">5.2 IPv4 与子网划分</h3>
+<p>必须掌握：</p>
+<ul>
+<li>IP 地址分类与 CIDR</li>
+<li>子网掩码</li>
+<li>网络地址、广播地址、可用主机范围</li>
+<li>VLSM</li>
+<li>路由汇总</li>
+</ul>
+<h4 id="实操案例-2部门网段规划">实操案例 2：部门网段规划</h4>
+<p>场景：</p>
+<ul>
+<li>总公司 3 个部门：研发 120 人、财务 30 人、市场 50 人</li>
+<li>你有一个网段 <code>192.168.10.0/24</code></li>
+</ul>
+<p>要求：</p>
+<ul>
+<li>合理划分子网</li>
+<li>保证扩展性</li>
+</ul>
+<p>标准思路：</p>
+<ul>
+<li>研发：<code>/25</code></li>
+<li>市场：<code>/26</code></li>
+<li>财务：<code>/27</code></li>
+<li>预留：剩余地址段</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>子网规划先按最大网段切</li>
+<li>不要只满足“现在够用”，至少留 20%-30% 余量</li>
+<li>学会把地址规划和组织架构、楼层、业务域关联</li>
+</ul>
+<hr>
+<h2 id="6-二层交换你要学到为什么会环路">6. 二层交换：你要学到“为什么会环路”</h2>
+<h3 id="61-必学主题">6.1 必学主题</h3>
+<ul>
+<li>VLAN</li>
+<li>Trunk</li>
+<li>STP/RSTP/MSTP</li>
+<li>Eth-Trunk</li>
+<li>堆叠</li>
+<li>交换机基础安全</li>
+</ul>
+<h4 id="图示vlan-隔离">图示：VLAN 隔离</h4>
+<pre><code>PC1(VLAN10) -- SW1 -- SW2 -- PC2(VLAN10)
+PC3(VLAN20) -- SW1 -- SW2 -- PC4(VLAN20)</code></pre>
+<p>核心理解：</p>
+<ul>
+<li>VLAN 是逻辑隔离广播域</li>
+<li>Trunk 用来在设备间承载多个 VLAN</li>
+</ul>
+<h4 id="实操案例-3vlan-trunk-三层网关">实操案例 3：VLAN + Trunk + 三层网关</h4>
+<p>目标：</p>
+<ul>
+<li>让 VLAN10 和 VLAN20 既隔离又可互访</li>
+</ul>
+<p>典型步骤（华为 VRP 思路）：</p>
+<ol>
+<li>创建 VLAN 10/20</li>
+<li>把接入口加入不同 VLAN</li>
+<li>上联口设为 trunk</li>
+<li>在三层交换机上创建 Vlanif10/Vlanif20</li>
+<li>给网关接口配置地址</li>
+</ol>
+<p>验证：</p>
+<ul>
+<li>同 VLAN 能互通</li>
+<li>跨 VLAN 通过三层网关互通</li>
+</ul>
+<p>排障思路：</p>
+<ul>
+<li>先看接口 UP/DOWN</li>
+<li>再看 VLAN 是否创建</li>
+<li>再看端口是否入对 VLAN</li>
+<li>再看 trunk 是否放行 VLAN</li>
+<li>最后看网关 IP 是否正确</li>
+</ul>
+<h4 id="实操案例-4stp-环路与收敛">实操案例 4：STP 环路与收敛</h4>
+<p>场景：</p>
+<ul>
+<li>三台交换机组成三角形</li>
+</ul>
+<p>目标：</p>
+<ul>
+<li>理解为什么不用 STP 会广播风暴</li>
+<li>看根桥选举、根端口、指定端口、阻塞端口</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>学 STP 不要只记状态，重点是“谁离根更近”</li>
+<li>实验时故意拔掉根桥链路，观察拓扑变化</li>
+</ul>
+<hr>
+<h2 id="7-三层路由从能通走向稳定地通">7. 三层路由：从“能通”走向“稳定地通”</h2>
+<h3 id="71-必学主题">7.1 必学主题</h3>
+<ul>
+<li>静态路由</li>
+<li>缺省路由</li>
+<li>浮动静态路由</li>
+<li>OSPF</li>
+<li>路由引入</li>
+<li>路由汇总</li>
+<li>IPv6 基础路由</li>
+</ul>
+<h4 id="实操案例-5静态路由-备份链路">实操案例 5：静态路由 + 备份链路</h4>
+<p>目标：</p>
+<ul>
+<li>主链路故障时自动切到备链路</li>
+</ul>
+<p>方法：</p>
+<ul>
+<li>主路由缺省静态</li>
+<li>备路由静态设置更大优先级</li>
+</ul>
+<p>你要理解：</p>
+<ul>
+<li>这不是“高端技术”，但是真实工程里很常用</li>
+<li>很多网络事故，不是因为协议不会，而是优先级没设计好</li>
+</ul>
+<h4 id="实操案例-6ospf-单区域到多区域">实操案例 6：OSPF 单区域到多区域</h4>
+<p>步骤建议：</p>
+<ol>
+<li>先做单区域</li>
+<li>再做 Area 0 + Area 1/2</li>
+<li>再加认证、汇总、缺省路由发布、路由过滤</li>
+<li>再做快速收敛与排障</li>
+</ol>
+<p>关键命令观察点：</p>
+<ul>
+<li>邻居状态</li>
+<li>LSDB</li>
+<li>路由表</li>
+<li>DR/BDR</li>
+</ul>
+<p>排障口诀：</p>
+<ul>
+<li>邻居不起：先看三层可达</li>
+<li>三层可达再看 Area、Hello/Dead、认证、MTU</li>
+<li>邻居起来了但没路由：看 LSA、路由策略、汇总、引入</li>
+</ul>
+<hr>
+<h2 id="8-bgp网络工程师的真正分水岭">8. BGP：网络工程师的真正分水岭</h2>
+<h3 id="81-先理解四件事">8.1 先理解四件事</h3>
+<ul>
+<li>为什么 IGP 不适合承载大规模自治域间路由</li>
+<li>BGP 的邻居建立和路由传播逻辑</li>
+<li>路径属性如何影响选路</li>
+<li>路由控制如何落地到企业网络</li>
+</ul>
+<h3 id="82-必学主题">8.2 必学主题</h3>
+<ul>
+<li>EBGP / IBGP</li>
+<li>Next-Hop</li>
+<li>Local Preference</li>
+<li>MED</li>
+<li>AS-Path</li>
+<li>Route-Reflector</li>
+<li>Community</li>
+<li>路由策略</li>
+<li>BGP 与 MPLS VPN</li>
+</ul>
+<h4 id="实操案例-7双出口企业-bgp-选路">实操案例 7：双出口企业 BGP 选路</h4>
+<p>场景：</p>
+<ul>
+<li>企业有两条 Internet 出口</li>
+<li>希望主用出口 A，备份出口 B</li>
+<li>某些业务走 B 更便宜</li>
+</ul>
+<p>学习目标：</p>
+<ul>
+<li>用 Local Preference 控制出向</li>
+<li>用 AS-Path prepend / MED / community 配合控制入向</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>BGP 不要背“哪个属性优先级更高”完事</li>
+<li>要把它翻译成业务语言：</li>
+<li>哪条路更便宜</li>
+<li>哪条路更稳定</li>
+<li>哪条路适合走哪类流量</li>
+</ul>
+<hr>
+<h2 id="9-mpls-vpn-srhcie-的硬门槛">9. MPLS / VPN / SR：HCIE 的硬门槛</h2>
+<h3 id="91-为什么难">9.1 为什么难</h3>
+<p>因为它同时要求你理解：</p>
+<ul>
+<li>标签转发</li>
+<li>控制层与转发层分离</li>
+<li>VPN 路由隔离</li>
+<li>大规模承载网设计</li>
+</ul>
+<h3 id="92-必学主题">9.2 必学主题</h3>
+<ul>
+<li>MPLS 基础</li>
+<li>LDP</li>
+<li>L3VPN</li>
+<li>跨域 Option A/B/C</li>
+<li>EVPN</li>
+<li>Segment Routing</li>
+<li>SRv6</li>
+</ul>
+<h4 id="图示mpls-l3vpn-基本模型">图示：MPLS L3VPN 基本模型</h4>
+<pre><code>CE1 -- PE1 == P == PE2 -- CE2</code></pre>
+<p>理解顺序：</p>
+<ol>
+<li>先理解普通 IP 转发</li>
+<li>再理解“为什么要打标签”</li>
+<li>再理解“为什么 VPN 要有 RD/RT”</li>
+<li>最后才看跨域和复杂选项</li>
+</ol>
+<h4 id="实操案例-8mpls-l3vpn-基础">实操案例 8：MPLS L3VPN 基础</h4>
+<p>目标：</p>
+<ul>
+<li>CE1 与 CE2 在不同站点互通</li>
+<li>承载网核心只看标签，不看用户私网细节</li>
+</ul>
+<p>你必须会：</p>
+<ul>
+<li>搭 IGP</li>
+<li>配 MPLS/LDP</li>
+<li>建 MP-BGP VPNv4 邻居</li>
+<li>配 VRF、RD、RT</li>
+<li>验证 VPN 路由和标签转发</li>
+</ul>
+<p>排障思路：</p>
+<ul>
+<li>先看 IGP 通不通</li>
+<li>再看 LDP 邻居</li>
+<li>再看 MP-BGP VPNv4</li>
+<li>再看 VRF 中是否有路由</li>
+<li>最后查数据平面标签</li>
+</ul>
+<h4 id="实操案例-9sr-srv6-入门">实操案例 9：SR / SRv6 入门</h4>
+<p>目标：</p>
+<ul>
+<li>理解传统 MPLS 隧道与 SR 的区别</li>
+<li>先做 SR-MPLS，再看 SRv6 基础</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>SR/SRv6 很容易学成“概念堆”</li>
+<li>你必须把它和“流量工程、可编程、运维简化”联系起来</li>
+</ul>
+<hr>
+<h2 id="10-园区网络从交换机配置到企业架构设计">10. 园区网络：从交换机配置到企业架构设计</h2>
+<h3 id="101-必学主题">10.1 必学主题</h3>
+<ul>
+<li>园区三层架构</li>
+<li>WLAN 基础</li>
+<li>NAC</li>
+<li>业务随行</li>
+<li>VXLAN/BGP EVPN</li>
+<li>CloudCampus</li>
+<li>CampusInsight</li>
+</ul>
+<h4 id="图示典型大中型园区">图示：典型大中型园区</h4>
+<section class="diagram"><div class="diagram-head"><strong>拓扑示意</strong><span>自动从文档中的结构文本生成</span></div><div class="diagram-body"><div class="diagram-grid"><div><svg viewBox="0 0 780 230" class="diagram-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="network topology diagram"><defs><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#94a3b8" flood-opacity=".18"/></filter></defs><rect x="0" y="0" width="100%" height="100%" fill="#fcfffe"/><line x1="90" y1="70" x2="240" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="240" y1="70" x2="390" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="390" y1="70" x2="540" y2="70" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><line x1="690" y1="70" x2="90" y2="160" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/><rect x="42" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="90" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">用户接入层</text><rect x="192" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="240" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">汇聚层</text><rect x="342" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="390" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">核心层</text><rect x="492" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="540" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">出口/防火墙/Internet</text><rect x="642" y="48" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="690" y="75" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">WAC/AP</text><rect x="42" y="138" width="96" height="44" rx="14" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#s)"/><text x="90" y="165" text-anchor="middle" font-size="14" font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#0f172a">数据中心/云</text></svg></div><div class="diagram-text"><pre><code>用户接入层 --&gt; 汇聚层 --&gt; 核心层 --&gt; 出口/防火墙/Internet
+              |            |
+              +--&gt; WAC/AP  +--&gt; 数据中心/云</code></pre></div></div></div></section>
+<h3 id="102-你要学的不只是配置而是设计">10.2 你要学的不只是配置，而是设计</h3>
+<p>设计时必须回答：</p>
+<ol>
+<li>地址怎么规划</li>
+<li>网关放哪里</li>
+<li>广播域怎么控制</li>
+<li>有线无线如何统一认证</li>
+<li>漫游和业务策略如何随人走</li>
+<li>东西向流量和南北向流量如何分层</li>
+<li>运维如何可视化</li>
+</ol>
+<h4 id="实操案例-10三层园区升级成-vxlanevpn-园区">实操案例 10：三层园区升级成 VXLAN/EVPN 园区</h4>
+<p>场景：</p>
+<ul>
+<li>原网络为传统 VLAN + STP + 三层网关</li>
+<li>需求：跨楼层二层延伸、统一策略、集中运维</li>
+</ul>
+<p>你要完成：</p>
+<ul>
+<li>Underlay 设计</li>
+<li>Overlay 设计</li>
+<li>VXLAN VNI 规划</li>
+<li>EVPN 控制面</li>
+<li>接入认证与业务隔离</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>学园区不要只背方案名</li>
+<li>先问：传统网络痛点到底是什么</li>
+<li>没有痛点，就没有新架构的价值</li>
+</ul>
+<hr>
+<h2 id="11-广域互联与承载从点到点到企业云网">11. 广域互联与承载：从点到点到企业云网</h2>
+<h3 id="111-必学主题">11.1 必学主题</h3>
+<ul>
+<li>WAN 基础组网</li>
+<li>NAT 穿越</li>
+<li>高可用广域互联</li>
+<li>智能选路</li>
+<li>SD-WAN</li>
+<li>CloudWAN</li>
+<li>SLA 监测与优化</li>
+</ul>
+<h4 id="实操案例-11分支互联与-sd-wan">实操案例 11：分支互联与 SD-WAN</h4>
+<p>场景：</p>
+<ul>
+<li>总部 + 3 分支</li>
+<li>Internet 与 MPLS 专线混合承载</li>
+<li>视频优先，办公流量次之，备份业务低优先级</li>
+</ul>
+<p>任务：</p>
+<ul>
+<li>设计多链路接入</li>
+<li>设计业务选路</li>
+<li>设计故障切换</li>
+<li>设计安全隔离</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>WAN 题一定要从“业务体验”出发</li>
+<li>不要只盯协议，要盯时延、抖动、丢包、可用性</li>
+</ul>
+<hr>
+<h2 id="12-网络自动化高级网络专家必须有的第二大脑">12. 网络自动化：高级网络专家必须有的第二大脑</h2>
+<h3 id="121-必学主题">12.1 必学主题</h3>
+<ul>
+<li>Python 基础</li>
+<li>SSH / Paramiko</li>
+<li>NETCONF / YANG</li>
+<li>RESTCONF / RESTful</li>
+<li>Telemetry</li>
+<li>OPS</li>
+<li>iMaster NCE Open API</li>
+</ul>
+<h3 id="122-从简单到复杂的正确顺序">12.2 从简单到复杂的正确顺序</h3>
+<ol>
+<li>Python 语法</li>
+<li>文件读写</li>
+<li>正则表达式</li>
+<li>Paramiko 批量登录</li>
+<li>批量备份配置</li>
+<li>批量检查版本/接口/路由</li>
+<li>NETCONF 下发配置</li>
+<li>API 拉取状态</li>
+<li>Telemetry 做监控</li>
+</ol>
+<h4 id="实操案例-12批量备份设备配置">实操案例 12：批量备份设备配置</h4>
+<p>目标：</p>
+<ul>
+<li>登录多台设备</li>
+<li>执行 <code>display current-configuration</code></li>
+<li>保存到本地</li>
+</ul>
+<p>你应该形成的工程意识：</p>
+<ul>
+<li>每次改网前先备份</li>
+<li>每次割接前先收集基线</li>
+<li>每次故障后要保留证据</li>
+</ul>
+<h4 id="实操案例-13批量检查-ospf-邻居">实操案例 13：批量检查 OSPF 邻居</h4>
+<p>思路：</p>
+<ul>
+<li>设备列表来自 CSV</li>
+<li>Paramiko 执行 <code>display ospf peer</code></li>
+<li>解析输出</li>
+<li>生成异常设备报告</li>
+</ul>
+<p>独特技巧：</p>
+<ul>
+<li>自动化的价值不是“炫技”</li>
+<li>而是把低价值、重复、高风险的人肉操作机器化</li>
+</ul>
+<hr>
+<h2 id="13-故障排查高手不是会命令而是会缩小范围">13. 故障排查：高手不是会命令，而是会缩小范围</h2>
+<h3 id="131-五层排障法">13.1 五层排障法</h3>
+<ol>
+<li>物理层：接口、模块、双工、速率、光功率</li>
+<li>二层：VLAN、Trunk、MAC、STP、聚合</li>
+<li>三层：ARP、路由、邻居、下一跳</li>
+<li>传输层：端口、会话、ACL/NAT</li>
+<li>应用层：DNS、HTTP、认证、NTP、API</li>
+</ol>
+<h3 id="132-黄金思路">13.2 黄金思路</h3>
+<ul>
+<li>先确认“现象”</li>
+<li>再确认“范围”</li>
+<li>再确认“最近变更”</li>
+<li>再确认“控制平面是否正常”</li>
+<li>最后查“数据平面是否转发”</li>
+</ul>
+<h3 id="133-三个常见故障案例">13.3 三个常见故障案例</h3>
+<h4 id="案例-a同-vlan-不通">案例 A：同 VLAN 不通</h4>
+<p>排查顺序：</p>
+<ol>
+<li>网卡和接口 UP 吗</li>
+<li>VLAN 对吗</li>
+<li>交换机 MAC 学到了吗</li>
+<li>有环路或安全策略拦截吗</li>
+</ol>
+<h4 id="案例-bospf-邻居不起">案例 B：OSPF 邻居不起</h4>
+<p>排查顺序：</p>
+<ol>
+<li>IP 是否可达</li>
+<li>网络类型是否一致</li>
+<li>Hello/Dead 时间是否一致</li>
+<li>Area 是否一致</li>
+<li>认证是否一致</li>
+<li>MTU 是否冲突</li>
+</ol>
+<h4 id="案例-cmpls-vpn-不通">案例 C：MPLS VPN 不通</h4>
+<p>排查顺序：</p>
+<ol>
+<li>IGP</li>
+<li>LDP</li>
+<li>MP-BGP VPNv4</li>
+<li>VRF</li>
+<li>CE-PE 路由交互</li>
+<li>标签转发</li>
+</ol>
+<hr>
+<h2 id="14-工程设计方法像高级专家一样思考">14. 工程设计方法：像高级专家一样思考</h2>
+<h3 id="141-设计不是把功能堆上去">14.1 设计不是“把功能堆上去”</h3>
+<p>一个成熟设计至少要回答：</p>
+<ul>
+<li>为什么这样架构</li>
+<li>规模边界是什么</li>
+<li>冗余在哪里</li>
+<li>收敛目标是什么</li>
+<li>安全边界在哪里</li>
+<li>运维入口在哪里</li>
+<li>未来怎么扩展</li>
+<li>故障如何回退</li>
+</ul>
+<h3 id="142-高级工程师的-8-个视角">14.2 高级工程师的 8 个视角</h3>
+<table><thead><tr><th>视角</th><th>关键问题</th></tr></thead><tbody><tr><td>业务视角</td><td>网络是为谁服务的</td></tr><tr><td>架构视角</td><td>为什么选这套方案</td></tr><tr><td>性能视角</td><td>时延、抖动、带宽、拥塞如何控制</td></tr><tr><td>可靠性视角</td><td>单点在哪，故障切换多久</td></tr><tr><td>安全视角</td><td>谁能接入、谁能访问、谁能变更</td></tr><tr><td>运维视角</td><td>如何监控、如何排障、如何审计</td></tr><tr><td>自动化视角</td><td>哪些工作可以批量化</td></tr><tr><td>生命周期视角</td><td>规划、建设、验证、割接、运维、优化</td></tr></tbody></table>
+<h3 id="143-一个教授式思维模型">14.3 一个“教授式”思维模型</h3>
+<p>对任何网络方案，都用这个模板分析：</p>
+<ol>
+<li>问题背景</li>
+<li>约束条件</li>
+<li>可选方案</li>
+<li>方案比较</li>
+<li>最终选择</li>
+<li>风险与补救</li>
+<li>验证方法</li>
+<li>运维与演进</li>
+</ol>
+<hr>
+<h2 id="15-学习技巧真正能拉开差距的独特方法">15. 学习技巧：真正能拉开差距的独特方法</h2>
+<h3 id="技巧-1每学一个协议必须做三件套">技巧 1：每学一个协议，必须做“三件套”</h3>
+<ul>
+<li>画原理图</li>
+<li>抓包</li>
+<li>配实验</li>
+</ul>
+<h3 id="技巧-2每做一个实验必须输出四样东西">技巧 2：每做一个实验，必须输出四样东西</h3>
+<ul>
+<li>拓扑图</li>
+<li>地址表</li>
+<li>配置文件</li>
+<li>排障记录</li>
+</ul>
+<h3 id="技巧-3反向学习">技巧 3：反向学习</h3>
+<p>不要只学“怎么配”，要故意配错，然后排错。</p>
+<p>示例：</p>
+<ul>
+<li>OSPF 认证故意不一致</li>
+<li>BGP 邻居故意改错 AS</li>
+<li>VLAN trunk 故意不放行</li>
+<li>MPLS LDP 故意漏配</li>
+</ul>
+<h3 id="技巧-4建立故障词典">技巧 4：建立“故障词典”</h3>
+<p>自己做一个表：</p>
+<table><thead><tr><th>现象</th><th>可能原因</th><th>快速验证命令</th><th>修复动作</th></tr></thead><tbody><tr><td>OSPF 邻居不起</td><td>Area 不一致</td><td>display ospf peer</td><td>改 Area</td></tr><tr><td>跨 VLAN 不通</td><td>Vlanif 未起</td><td>display ip interface brief</td><td>补接口配置</td></tr><tr><td>BGP 不学路由</td><td>策略过滤</td><td>display bgp routing-table</td><td>查 route-policy</td></tr></tbody></table>
+<h3 id="技巧-5把命令背成问题树">技巧 5：把命令背成“问题树”</h3>
+<p>不要孤立背命令。 例如排 OSPF：</p>
+<ul>
+<li>邻居？</li>
+<li>LSDB？</li>
+<li>路由？</li>
+<li>接口？</li>
+<li>配置？</li>
+</ul>
+<p>你最终记住的是问题树，不是零散命令。</p>
+<hr>
+<h2 id="16-一份可以跟着执行的-24-周学习计划">16. 一份可以跟着执行的 24 周学习计划</h2>
+<h3 id="第-1-4-周打基础">第 1-4 周：打基础</h3>
+<ul>
+<li>OSI/TCP-IP</li>
+<li>IPv4/子网划分</li>
+<li>ARP/TCP/UDP/ICMP</li>
+<li>VLAN/Trunk/STP</li>
+<li>静态路由/OSPF 基础</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>20 个基础实验</li>
+<li>1 份网络基础笔记</li>
+<li>1 份地址规划模板</li>
+</ul>
+<h3 id="第-5-8-周强化交换与路由">第 5-8 周：强化交换与路由</h3>
+<ul>
+<li>MSTP、Eth-Trunk</li>
+<li>OSPF 多区域、汇总、认证</li>
+<li>ACL、NAT、DHCP、NTP</li>
+<li>IPv6 基础</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>15 个中级实验</li>
+<li>1 套排障清单</li>
+</ul>
+<h3 id="第-9-12-周bgp-mpls-入门">第 9-12 周：BGP + MPLS 入门</h3>
+<ul>
+<li>BGP 邻居与选路</li>
+<li>路由策略</li>
+<li>MPLS/LDP</li>
+<li>L3VPN</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>10 个 BGP/MPLS 实验</li>
+<li>1 份 MPLS VPN 排障手册</li>
+</ul>
+<h3 id="第-13-16-周园区与广域">第 13-16 周：园区与广域</h3>
+<ul>
+<li>园区三层架构</li>
+<li>NAC/业务随行</li>
+<li>VXLAN/EVPN</li>
+<li>SD-WAN/CloudWAN</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>4 份方案设计</li>
+<li>4 个综合实验</li>
+</ul>
+<h3 id="第-17-20-周自动化-高阶承载">第 17-20 周：自动化 + 高阶承载</h3>
+<ul>
+<li>Python</li>
+<li>Paramiko</li>
+<li>NETCONF/YANG</li>
+<li>Telemetry</li>
+<li>SR/SRv6</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>5 个自动化脚本</li>
+<li>2 个 SR/SRv6 实验</li>
+</ul>
+<h3 id="第-21-24-周hcie-冲刺">第 21-24 周：HCIE 冲刺</h3>
+<ul>
+<li>限时实验</li>
+<li>故障注入</li>
+<li>设计题复盘</li>
+<li>割接流程演练</li>
+</ul>
+<p>输出：</p>
+<ul>
+<li>10 套实验卷</li>
+<li>1 套设计答题模板</li>
+<li>1 套故障定位模板</li>
+</ul>
+<hr>
+<h2 id="17-每天怎么学最有效">17. 每天怎么学最有效</h2>
+<p>推荐节奏：</p>
+<ul>
+<li>40 分钟：学原理</li>
+<li>60 分钟：做实验</li>
+<li>20 分钟：写总结</li>
+<li>20 分钟：复盘错误</li>
+</ul>
+<p>每天必须回答三个问题：</p>
+<ol>
+<li>今天学的技术解决了什么问题</li>
+<li>今天最容易错的地方是什么</li>
+<li>如果面试官问“为什么这么设计”，我能不能讲清楚</li>
+</ol>
+<hr>
+<h2 id="18-你最终要达到的高级网络专家能力模型">18. 你最终要达到的“高级网络专家”能力模型</h2>
+<p>真正的高级网络专家，不是只会命令，而是同时具备：</p>
+<ul>
+<li>原理能力：能讲清协议和架构</li>
+<li>工程能力：能落地设计、部署、割接</li>
+<li>故障能力：能快速缩小范围并定位问题</li>
+<li>自动化能力：能用脚本提高效率</li>
+<li>表达能力：能写方案、写复盘、讲清取舍</li>
+<li>演进能力：知道什么时候该升级架构</li>
+</ul>
+<h3 id="终极标准">终极标准</h3>
+<p>如果你能做到下面 6 点，说明你已经不是初学者，而是在向高级专家靠拢：</p>
+<ol>
+<li>看见拓扑就能判断潜在单点</li>
+<li>看见需求就能给出 2-3 套方案比较</li>
+<li>出现故障能按层次排查，不慌乱</li>
+<li>配置不是死记，而是理解作用域和后果</li>
+<li>能独立写小脚本做批量校验</li>
+<li>能把复杂网络讲给外行听懂</li>
+</ol>
+<hr>
+<h2 id="19-最后的建议">19. 最后的建议</h2>
+<p>不要把“考 HCIE”当成唯一目标。 把它当成：</p>
+<ul>
+<li>建立系统化网络知识</li>
+<li>建立工程视角</li>
+<li>建立排障能力</li>
+<li>建立自动化能力</li>
+<li>建立专家级思维方式</li>
+</ul>
+<p>如果只背题，很难走远。 如果把每个知识点都变成“原理 + 拓扑 + 配置 + 验证 + 排障 + 复盘”，你会真正进步。</p>
+<hr>
+<h2 id="20-官方参考信息">20. 官方参考信息</h2>
+<p>以下信息用于校准认证路径与大纲：</p>
+<ul>
+<li>华为认证 Career Certification: https://e.huawei.com/en/talent/cert/</li>
+<li>HCIA-Datacom V1.0 考试大纲（公开 PDF）</li>
+<li>HCIE-Datacom V1.0 考试大纲（公开 PDF）</li>
+<li>华为 Datacom 认证发布说明：https://www.huawei.com/en/news/2020/11/huawei-datacom-certification</li>
+</ul>
+<p>说明：</p>
+<ul>
+<li>大纲内容可能更新，报考前务必再次核对华为官方最新页面</li>
+<li>本手册中的学习方法、案例节奏和训练建议为经验性建议，不等同于官方培训教材</li>
+</ul>
+          <nav class="pager"><span><span class="pager-label">上一页</span>已经是第一页</span><a href="华为HCIE_Datacom_实验命令参考.html"><span class="pager-label">下一页</span>华为 HCIE-Datacom 实验命令参考</a></nav>
+        </main>
+      </div>
+    </div>
+    <div class="footer">本页为本地自动生成，适合直接浏览、打印或继续二次修改。</div>
+  </div>
+  
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.querySelector('.sidebar');
+  const toggleTocButton = document.getElementById('toggle-toc');
+  const searchInput = document.getElementById('doc-search');
+  const searchMeta = document.getElementById('search-meta');
+  const searchCount = document.getElementById('search-count');
+  const nextMatchButton = document.getElementById('next-match');
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]')).filter(a => a.getAttribute('href') !== '#top');
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  const content = document.querySelector('.content');
+  let currentMarkIndex = -1;
+  let currentMarks = [];
+
+  function clearMarks() {
+    document.querySelectorAll('mark.search-mark').forEach(mark => {
+      const text = document.createTextNode(mark.textContent || '');
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(text, mark);
+      parent.normalize();
+    });
+    currentMarkIndex = -1;
+    currentMarks = [];
+  }
+
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlightInElement(element, keyword) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        const tag = parent.tagName;
+        if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'MARK'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+    const regex = new RegExp(escapeRegExp(keyword), 'gi');
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!text || !regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIndex = 0;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'search-mark';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIndex = match.index + match[0].length;
+      }
+      frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function runSearch(keyword) {
+    if (!content) return;
+    clearMarks();
+    const normalized = keyword.trim().toLowerCase();
+    const searchable = Array.from(content.querySelectorAll('h1,h2,h3,h4,p,li,td,th,.note'));
+    let matches = 0;
+
+    searchable.forEach(el => {
+      const hay = (el.textContent || '').toLowerCase();
+      const hit = normalized && hay.includes(normalized);
+      if (!normalized) {
+        el.style.display = '';
+      } else if (hit) {
+        el.style.display = '';
+        matches += 1;
+      } else if (el.closest('table') || el.closest('ul') || el.closest('ol')) {
+        if (!hay.includes(normalized)) el.style.display = '';
+      } else {
+        el.style.display = '';
+      }
+    });
+
+    document.querySelectorAll('.toc a[data-title]').forEach(link => {
+      const title = (link.getAttribute('data-title') || '').toLowerCase();
+      const hit = !normalized || title.includes(normalized);
+      link.style.display = hit ? '' : 'none';
+    });
+
+    if (normalized) {
+      highlightInElement(content, keyword.trim());
+      currentMarks = Array.from(document.querySelectorAll('mark.search-mark'));
+      if (currentMarks.length) {
+        currentMarkIndex = 0;
+        currentMarks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (searchMeta) {
+        searchMeta.style.display = 'block';
+        searchMeta.textContent = matches ? `已高亮包含“${keyword.trim()}”的内容` : `没有找到“${keyword.trim()}”`;
+      }
+      if (searchCount) searchCount.textContent = currentMarks.length ? `匹配 ${currentMarks.length} 处` : '无匹配';
+      if (nextMatchButton) nextMatchButton.disabled = currentMarks.length === 0;
+    } else if (searchMeta) {
+      searchMeta.style.display = 'none';
+      searchMeta.textContent = '';
+      if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+      if (nextMatchButton) nextMatchButton.disabled = true;
+    }
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      runSearch(searchInput.value);
+    });
+  }
+
+  if (nextMatchButton) {
+    nextMatchButton.addEventListener('click', function () {
+      if (!currentMarks.length) return;
+      currentMarkIndex = (currentMarkIndex + 1) % currentMarks.length;
+      currentMarks[currentMarkIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    nextMatchButton.disabled = true;
+  }
+
+  if (toggleTocButton && sidebar) {
+    toggleTocButton.addEventListener('click', function () {
+      sidebar.classList.toggle('collapsed');
+      toggleTocButton.textContent = sidebar.classList.contains('collapsed') ? '展开目录' : '折叠目录';
+    });
+  }
+
+  if (searchCount) searchCount.textContent = `章节 ${tocLinks.length}`;
+
+  if (!('IntersectionObserver' in window) || sections.length === 0) return;
+  const map = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (!visible.length) return;
+    const id = visible[0].target.id;
+    tocLinks.forEach(link => link.classList.toggle('active', link === map.get(id)));
+  }, { rootMargin: '-20% 0px -65% 0px', threshold: [0, 1] });
+  sections.forEach(section => observer.observe(section));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+天数,学习主题,核心知识点,当天实操,验收标准
+Day01,网络总览,OSI与TCP/IP模型,画出OSI与TCP-IP对照图,能口述每层作用
+Day02,报文转发,封装与解封装,抓包观察ICMP报文,能解释报文经过各层变化
+Day03,MAC与ARP,MAC地址与ARP解析,抓ARP请求与应答,能解释首次通信为什么先ARP
+Day04,IPv4基础,IP地址与子网掩码,做10道子网划分题,正确率90%
+Day05,CIDR与VLSM,CIDR与可变长子网,给3部门做地址规划,能写出网络/广播/主机范围
+Day06,TCP与UDP,TCP三次握手四次挥手,抓包看TCP握手,能解释TCP和UDP差异
+Day07,基础复盘,基础知识串联,完成1张总脑图,能把Day01-06串起来讲清楚
+Day08,交换机基础,交换机学习MAC机制,两台PC经交换机通信实验,能解释MAC地址表学习
+Day09,VLAN基础,VLAN隔离广播域,创建VLAN10/VLAN20,同VLAN互通异VLAN隔离
+Day10,Trunk原理,Trunk承载多VLAN,配置两交换机Trunk,跨交换机同VLAN互通
+Day11,Vlanif网关,VLAN间路由,配置Vlanif实现跨VLAN互通,PC跨VLAN能ping通
+Day12,STP基础,二层环路与生成树,三角拓扑启用STP,能识别阻塞端口
+Day13,RSTP/MSTP,RSTP与MSTP思想,拔链路观察收敛,能说出RSTP优点
+Day14,二层复盘,交换知识串联,完成VLAN+Trunk+STP实验拓扑,能独立排查二层不通
+Day15,静态路由,静态路由与缺省路由,3台路由器静态互通,全网互通成功
+Day16,浮动静态,主备静态路由,双出口备份实验,主链路断开后自动切换
+Day17,OSPF概念,链路状态路由协议,2台路由器建OSPF邻居,邻居状态Full
+Day18,OSPF单区域,LSA与路由学习,3台路由器单区域OSPF,能查看路由表
+Day19,OSPF多区域,Area 0和非骨干区域,完成多区域拓扑,路由正常学习
+Day20,OSPF排障,认证/Area/MTU故障,故意配错并修复,能总结邻居不起原因
+Day21,路由复盘,静态与OSPF对比,画路由学习流程图,能讲清静态和动态适用场景
+Day22,ACL基础,基本ACL与高级ACL,限制某PC访问某网段,ACL命中正确
+Day23,NAT基础,NAT Easy-IP原理,内网通过NAT访问外网模拟网段,地址转换生效
+Day24,DHCP基础,DHCP地址分配,交换机或路由器做DHCP,客户端自动获取IP
+Day25,IPv6基础,IPv6地址与邻居发现,配置IPv6互通,能ping通IPv6地址
+Day26,链路聚合,Eth-Trunk,双链路聚合实验,单链路断开业务不中断
+Day27,设备管理,NTP/日志/AAA基础,配置NTP与本地用户,能远程登录管理
+Day28,阶段测验1,基础综合实验,完成二层+三层小型拓扑,1小时内独立完成
+Day29,BGP概念,自治系统与BGP作用,画BGP与OSPF对比表,能讲清为什么要BGP
+Day30,EBGP建邻,EBGP邻居建立,两AS建EBGP邻居,邻居Established
+Day31,IBGP与Next-Hop,IBGP传播与Next-Hop问题,3台设备IBGP实验,理解next-hop-self
+Day32,BGP选路属性1,Local Preference与AS-Path,控制双出口选路,主备出口符合预期
+Day33,BGP选路属性2,MED与Community,做简单策略控制,能验证属性生效
+Day34,Route-Policy,路由策略过滤与改写,按前缀过滤路由,表项变化符合预期
+Day35,BGP复盘,BGP问题树,整理BGP排障清单,能按问题树定位常见故障
+Day36,MPLS基础,MPLS与标签转发,理解标签栈与FEC,画标签转发流程图
+Day37,LDP基础,LDP邻居与标签分发,搭建MPLS骨干+LDP,能查看LSP信息
+Day38,MPLS VPN概念,VRF/RD/RT,整理L3VPN控制平面逻辑,能解释RD和RT作用
+Day39,L3VPN实验1,基础MPLS L3VPN,CE-PE-P-PE-CE互通,跨站点私网互通
+Day40,L3VPN实验2,多VPN隔离,两个VPN实例并存,不同VPN互相隔离
+Day41,MPLS排障,IGP/LDP/MP-BGP/VRF排查,故障注入并恢复,能形成排障顺序
+Day42,阶段测验2,BGP+MPLS综合,完成双出口+L3VPN实验,90分钟内完成
+Day43,园区架构,接入汇聚核心三层架构,画企业园区拓扑,能说明分层价值
+Day44,WLAN基础,AP/AC/WLAN基础概念,整理无线园区结构图,能说清瘦AP与胖AP区别
+Day45,NAC基础,认证准入思路,设计访客/员工接入策略,能写简单准入流程
+Day46,VXLAN概念,Underlay与Overlay,VXLAN封装原理图,能解释VNI作用
+Day47,EVPN概念,EVPN控制面,整理EVPN路由类型,能说出EVPN价值
+Day48,VXLAN/EVPN实验,简单二层VNI互通,搭小型实验或画完整流程图,能讲清报文路径
+Day49,园区业务随行,用户与策略解耦,写1个用户移动场景说明,能解释业务随行意义
+Day50,园区复盘,园区设计方法,做1份小型园区设计文档,包含地址/网关/冗余
+Day51,WAN基础,分支互联和双链路,画总部-分支组网图,能说清链路角色
+Day52,SD-WAN概念,应用选路与链路质量,写出视频/办公/备份流量策略,能说明业务选路原则
+Day53,CloudWAN/SR基础,承载网演进思路,对比MPLS和SR/SRv6,能解释演进价值
+Day54,QoS基础,分类标记队列调度,设计简单QoS策略,能说明优先级逻辑
+Day55,自动化基础,Python环境与语法,写变量/循环/函数小脚本,脚本可运行
+Day56,Paramiko批量登录,SSH自动化,批量登录设备执行display命令,成功获取输出
+Day57,配置备份脚本,自动备份配置,保存多台设备配置到文件,生成配置备份目录
+Day58,巡检脚本,批量检查OSPF/BGP邻居,输出异常报告,脚本能识别异常设备
+Day59,NETCONF/RESTCONF认知,接口化运维思路,整理NETCONF与CLI区别,能说清自动化价值
+Day60,最终综合,设计+部署+排障+复盘,完成1套综合实验并写复盘,能独立说明架构/配置/故障/优化
